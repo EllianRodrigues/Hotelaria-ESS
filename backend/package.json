@@ -7,7 +7,12 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
-  "keywords": ["express", "sqlite", "mvc", "api"],
+  "keywords": [
+    "express",
+    "sqlite",
+    "mvc",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -15,6 +20,6 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.10"
   }
-} 
+}
