@@ -70,16 +70,17 @@ exports.getHospedeById = async (req, res) => {
 exports.updateHospedePassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { newPassword, loggedInCpf } = req.body;
+    const { currentPassword, newPassword, loggedInCpf } = req.body; // NOVO: currentPassword
 
-    if (!newPassword || !loggedInCpf) {
-      return res.status(400).json({ error: 'Nova senha e CPF do usuário logado são obrigatórios.' });
+    if (!currentPassword || !newPassword || !loggedInCpf) {
+      return res.status(400).json({ error: 'Senha atual, nova senha e CPF do usuário logado são obrigatórios.' });
     }
 
-    const updated = await Hospede.updatePassword(id, newPassword, loggedInCpf);
+    const updated = await Hospede.updatePassword(id, currentPassword, newPassword, loggedInCpf);
 
     if (!updated) {
-      return res.status(403).json({ error: 'Não autorizado ou Hóspede não encontrado para este CPF.' });
+      // A mensagem agora pode ser mais específica se a senha atual estiver errada
+      return res.status(401).json({ error: 'Senha atual incorreta' });
     }
 
     res.status(200).json({ message: 'Senha do hóspede atualizada com sucesso!' });

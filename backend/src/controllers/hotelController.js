@@ -91,17 +91,16 @@ exports.getHotelById = async (req, res) => {
 exports.updateHotelPassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { newPassword, loggedInCnpj } = req.body;
+    const { currentPassword, newPassword, loggedInCnpj } = req.body;
 
-    if (!newPassword || !loggedInCnpj) {
-      return res.status(400).json({ error: 'Nova senha e CNPJ do hotel logado são obrigatórios.' });
+    if (!currentPassword || !newPassword || !loggedInCnpj) {
+      return res.status(400).json({ error: 'Senha atual, nova senha e CNPJ do hotel logado são obrigatórios.' });
     }
 
-    // Em um cenário real, você verificaria a senha atual antes de permitir a mudança.
-    const updated = await Hotel.updatePassword(id, newPassword, loggedInCnpj);
+    const updated = await Hotel.updatePassword(id, currentPassword, newPassword, loggedInCnpj);
 
     if (!updated) {
-      return res.status(403).json({ error: 'Não autorizado ou Hotel não encontrado para este CNPJ.' });
+      return res.status(401).json({ error: 'Senha atual incorreta' });
     }
 
     res.status(200).json({ message: 'Senha do hotel atualizada com sucesso!' });

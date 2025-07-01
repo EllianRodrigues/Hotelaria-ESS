@@ -57,15 +57,24 @@ const Hospede = {
     });
   },
 
-  updatePassword: (id, newPassword, loggedInCpf) => {
-    return new Promise((resolve, reject) => {
-      db.run('UPDATE hospede SET senha = ? WHERE id = ? AND cpf = ?',
-        [newPassword, id, loggedInCpf],
-        function (err) {
-          if (err) reject(err);
-          else resolve(this.changes > 0 ? true : false);
+  updatePassword: (id, currentPassword, newPassword, loggedInCpf) => {
+    return new Promise((resolve, reject) => { // <--- CORRIGIDO AQUI: apenas UMA vez 'new'
+      db.get('SELECT senha FROM hospede WHERE id = ? AND cpf = ?', [id, loggedInCpf], (err, row) => {
+        if (err) return reject(err);
+        if (!row) return resolve(false);
+
+        if (!Hospede.checkPassword(currentPassword, row.senha)) {
+          return resolve(false);
         }
-      );
+
+        db.run('UPDATE hospede SET senha = ? WHERE id = ?',
+          [newPassword, id],
+          function (err) {
+            if (err) reject(err);
+            else resolve(this.changes > 0 ? true : false);
+          }
+        );
+      });
     });
   }
 };

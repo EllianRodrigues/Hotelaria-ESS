@@ -89,7 +89,7 @@ function EditHotel() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Editar Hotel (ID: {id})</h2>
+      <h2>Editar Hotel </h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
         <input type="text" name="nome" placeholder="Nome do Hotel" value={formData.nome || ''} onChange={handleChange} required />
         <input type="email" name="email" placeholder="Email do Hotel" value={formData.email || ''} onChange={handleChange} required />

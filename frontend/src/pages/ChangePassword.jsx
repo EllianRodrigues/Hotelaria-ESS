@@ -1,4 +1,4 @@
-// src/pages/ChangePassword.jsx (Este componente pode ser genérico para Hóspede/Hotel)
+// src/pages/ChangePassword.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -6,16 +6,16 @@ import { useAuth } from '../context/AuthContext.jsx';
 function ChangePassword() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [currentPassword, setCurrentPassword] = useState(''); // NOVO ESTADO
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Redireciona se não houver usuário logado ou se faltarem dados essenciais
     if (!user || !user.id || !(user.cpf || user.cnpj)) {
       alert('Você precisa estar logado para mudar sua senha.');
-      navigate('/login-hospede'); // Redireciona para o login de hóspede como padrão
+      navigate('/login-hospede');
     }
   }, [user, navigate]);
 
@@ -25,12 +25,12 @@ function ChangePassword() {
     setError(null);
 
     if (newPassword !== confirmPassword) {
-      setError('A nova senha e a confirmação não coincidem.');
+      setError('A nova senha não coincide.');
       setLoading(false);
       return;
     }
-    if (newPassword.length < 3) { // Exemplo de validação simples
-        setError('A senha deve ter no mínimo 3 caracteres.');
+    if (newPassword.length < 3) {
+        setError('A nova senha deve ter no mínimo 3 caracteres.');
         setLoading(false);
         return;
     }
@@ -40,10 +40,10 @@ function ChangePassword() {
 
     if (user.tipo === 'hospede') {
       backendUrl = `http://localhost:3000/api/hospedes/${user.id}/password`;
-      bodyData = { newPassword, loggedInCpf: user.cpf };
+      bodyData = { currentPassword, newPassword, loggedInCpf: user.cpf }; // NOVO: currentPassword
     } else if (user.tipo === 'hotel') {
       backendUrl = `http://localhost:3000/api/hotels/${user.id}/password`;
-      bodyData = { newPassword, loggedInCnpj: user.cnpj };
+      bodyData = { currentPassword, newPassword, loggedInCnpj: user.cnpj }; // NOVO: currentPassword
     } else {
       setError('Tipo de usuário desconhecido para mudança de senha.');
       setLoading(false);
@@ -65,9 +65,10 @@ function ChangePassword() {
       }
 
       alert('Senha atualizada com sucesso!');
+      setCurrentPassword(''); // Limpa os campos após sucesso
       setNewPassword('');
       setConfirmPassword('');
-      navigate('/'); // Ou de volta para a HomePage
+      navigate('/'); // Volta para a página do perfil
     } catch (err) {
       console.error('Erro ao atualizar senha:', err);
       setError('Erro ao atualizar senha: ' + err.message);
@@ -83,6 +84,8 @@ function ChangePassword() {
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h2>Alterar Senha ({user.tipo === 'hospede' ? 'Hóspede' : 'Hotel'} - {user.nome})</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        {/* NOVO CAMPO: Senha Atual */}
+        <input type="password" placeholder="Senha Atual" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
         <input type="password" placeholder="Nova Senha" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
         <input type="password" placeholder="Confirme a Nova Senha" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         <button type="submit" disabled={loading}>

@@ -57,15 +57,24 @@ const Hotel = {
     });
   },
 
-  updatePassword: (id, newPassword, loggedInCnpj) => {
-    return new Promise((resolve, reject) => {
-      db.run('UPDATE hotel SET senha = ? WHERE id = ? AND cnpj = ?',
-        [newPassword, id, loggedInCnpj], // Atualiza a senha verificando ID e CNPJ
-        function (err) {
-          if (err) reject(err);
-          else resolve(this.changes > 0 ? true : false);
+   updatePassword: (id, currentPassword, newPassword, loggedInCnpj) => {
+    return new Promise((resolve, reject) => { // <--- CORRIGIDO AQUI: apenas UMA vez 'new'
+      db.get('SELECT senha FROM hotel WHERE id = ? AND cnpj = ?', [id, loggedInCnpj], (err, row) => {
+        if (err) return reject(err);
+        if (!row) return resolve(false);
+
+        if (!Hotel.checkPassword(currentPassword, row.senha)) {
+          return resolve(false);
         }
-      );
+
+        db.run('UPDATE hotel SET senha = ? WHERE id = ?',
+          [newPassword, id],
+          function (err) {
+            if (err) reject(err);
+            else resolve(this.changes > 0 ? true : false);
+          }
+        );
+      });
     });
   }
 };
