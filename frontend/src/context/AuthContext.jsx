@@ -1,10 +1,9 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  // Estado para armazenar informações do usuário logado
-  // user: { id, nome, email, tipo: 'hospede' | 'hotel', cpf? | cnpj? } ou null
   const [user, setUser] = useState(() => {
     // Tenta carregar o usuário do localStorage ao iniciar
     try {
@@ -16,22 +15,20 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
-  // Salva o usuário no localStorage sempre que o estado 'user' mudar
+  // Salva o usuário no localStorage SEMPRE que o estado 'user' mudar
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('user');
+      localStorage.removeItem('user'); // Remove se o usuário for null (logout)
     }
-  }, [user]);
+  }, [user]); // Este efeito roda quando 'user' muda
 
-  // Função de login
   const login = (userData) => {
-    // userData deve conter { id, nome, email, tipo, cpf ou cnpj }
+    // userData DEVE conter { id, nome, email, tipo, cpf? | cnpj? }
     setUser(userData);
   };
 
-  // Função de logout
   const logout = () => {
     setUser(null);
   };

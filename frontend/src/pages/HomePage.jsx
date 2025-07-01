@@ -54,7 +54,7 @@ function HomePage() {
       ) : (
         <ul style={{ listStyle: 'none', padding: 0, maxWidth: '600px', margin: '20px auto', textAlign: 'left' }}>
           {hospedes.map((hospede) => (
-            <li key={hospede.id} style={{ backgroundColor: '#e9f7ff', border: '1px solid #cce7ff', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <li key={hospede.id} style={{ backgroundColor: 'black', border: '1px solidrgb(0, 0, 0)', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>
                 ID: {hospede.id} | Nome: {hospede.nome} | Email: {hospede.email} | CPF: {hospede.cpf}
               </span>
@@ -71,7 +71,7 @@ function HomePage() {
       ) : (
         <ul style={{ listStyle: 'none', padding: 0, maxWidth: '600px', margin: '20px auto', textAlign: 'left' }}>
           {hotels.map((hotel) => (
-            <li key={hotel.id} style={{ backgroundColor: '#e9f7ff', border: '1px solid #cce7ff', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <li key={hotel.id} style={{ backgroundColor: 'black', border: '1px solidrgb(0, 0, 0)', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>
                 ID: {hotel.id} | Nome: {hotel.nome} | Email: {hotel.email} | CNPJ: {hotel.cnpj}
               </span>
