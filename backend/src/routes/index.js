@@ -5,9 +5,18 @@ const reservationRouter = require('./reservationRouter');
 const roomRouter = require('./roomRouter');
 const userController = require('../controllers/userController');
 
-router.use('/hotels', hotelRouter)
+const hospedeController = require('../controllers/hospedeController');
+const hotelController = require('../controllers/hotelController');
+
+// router.use('/hotels', hotelRouter)
 router.use('/rooms', roomRouter)
 router.use('/reservations', reservationRouter)
-router.get('/users', userController.getAllUsers);
+// router.get('/users', userController.getAllUsers);
+
+//Ellian
+router.get('/hospedes', hospedeController.getAllHospedes);
+router.get('/hotels', hotelController.getAllHotels);
+router.post('/hospedes', hospedeController.createHospede);
+router.post('/hotels', hotelController.createHotel);
 
 module.exports = router; 
