@@ -30,7 +30,6 @@ exports.createHotel = async (req, res) => {
   try {
     const { nome, email, cnpj, senha } = req.body;
 
-    // Validação básica
     if (!nome || !email || !cnpj || !senha) {
       return res.status(400).json({ error: 'Missing information: nome, email, cnpj, and senha are required.' });
     }
@@ -75,13 +74,13 @@ exports.updateHotel = async (req, res) => {
 exports.getHotelById = async (req, res) => {
   try {
     const { id } = req.params;
-    const hotel = await Hotel.findById(id); // Chama o método findById do Model
+    const hotel = await Hotel.findById(id); 
     if (!hotel) {
       return res.status(404).json({ error: 'Hotel não encontrado.' });
     }
-    // Desestrutura para NÃO enviar a senha para o frontend
+
     const { senha, ...hotelWithoutPassword } = hotel;
-    res.status(200).json(hotelWithoutPassword); // Retorna o hotel sem a senha
+    res.status(200).json(hotelWithoutPassword); 
   } catch (err) {
     console.error('Erro ao obter hotel por ID:', err);
     res.status(500).json({ error: err.message });

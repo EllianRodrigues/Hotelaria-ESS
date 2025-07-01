@@ -47,18 +47,17 @@ const Hospede = {
     });
   },
 
-  // ESTE MÉTODO É ESSENCIAL PARA A ROTA GET /api/hospedes/:id
   findById: (id) => {
     return new Promise((resolve, reject) => {
       db.get('SELECT id, nome, email, cpf FROM hospede WHERE id = ?', [id], (err, row) => {
         if (err) reject(err);
-        else resolve(row); // Retorna o objeto do hóspede ou undefined se não encontrado
+        else resolve(row); 
       });
     });
   },
 
   updatePassword: (id, currentPassword, newPassword, loggedInCpf) => {
-    return new Promise((resolve, reject) => { // <--- CORRIGIDO AQUI: apenas UMA vez 'new'
+    return new Promise((resolve, reject) => { 
       db.get('SELECT senha FROM hospede WHERE id = ? AND cpf = ?', [id, loggedInCpf], (err, row) => {
         if (err) return reject(err);
         if (!row) return resolve(false);

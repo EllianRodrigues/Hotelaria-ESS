@@ -45,9 +45,7 @@ function LoginHotel() {
         <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} required />
         <button type="submit">Entrar</button>
       </form>
-      <p style={{marginTop: '20px'}}>
-        **Atenção:** Você precisará registrar um novo hotel para testar o login.
-      </p>
+      
     </div>
   );
 }

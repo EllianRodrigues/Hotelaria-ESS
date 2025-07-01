@@ -49,16 +49,15 @@ const Hotel = {
 
    findById: (id) => {
     return new Promise((resolve, reject) => {
-      // Retorna todos os campos EXCETO a senha para o frontend
       db.get('SELECT id, nome, email, cnpj FROM hotel WHERE id = ?', [id], (err, row) => {
         if (err) reject(err);
-        else resolve(row); // Retorna o hotel encontrado (ou undefined se não encontrar)
+        else resolve(row); 
       });
     });
   },
 
    updatePassword: (id, currentPassword, newPassword, loggedInCnpj) => {
-    return new Promise((resolve, reject) => { // <--- CORRIGIDO AQUI: apenas UMA vez 'new'
+    return new Promise((resolve, reject) => { 
       db.get('SELECT senha FROM hotel WHERE id = ? AND cnpj = ?', [id, loggedInCnpj], (err, row) => {
         if (err) return reject(err);
         if (!row) return resolve(false);

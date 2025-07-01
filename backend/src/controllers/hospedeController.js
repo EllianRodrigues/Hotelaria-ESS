@@ -50,15 +50,15 @@ exports.updateHospede = async (req, res) => {
   }
 };
 
-// ESTA FUNÇÃO É ESSENCIAL PARA A ROTA GET /api/hospedes/:id
+
 exports.getHospedeById = async (req, res) => {
   try {
     const { id } = req.params;
-    const hospede = await Hospede.findById(id); // Chama o método findById do Model
+    const hospede = await Hospede.findById(id); 
     if (!hospede) {
       return res.status(404).json({ error: 'Hóspede não encontrado.' });
     }
-    // Remove a senha antes de enviar para o frontend por segurança
+
     const { senha, ...hospedeWithoutPassword } = hospede;
     res.status(200).json(hospedeWithoutPassword);
   } catch (err) {
@@ -70,7 +70,7 @@ exports.getHospedeById = async (req, res) => {
 exports.updateHospedePassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { currentPassword, newPassword, loggedInCpf } = req.body; // NOVO: currentPassword
+    const { currentPassword, newPassword, loggedInCpf } = req.body; 
 
     if (!currentPassword || !newPassword || !loggedInCpf) {
       return res.status(400).json({ error: 'Senha atual, nova senha e CPF do usuário logado são obrigatórios.' });
@@ -79,7 +79,6 @@ exports.updateHospedePassword = async (req, res) => {
     const updated = await Hospede.updatePassword(id, currentPassword, newPassword, loggedInCpf);
 
     if (!updated) {
-      // A mensagem agora pode ser mais específica se a senha atual estiver errada
       return res.status(401).json({ error: 'Senha atual incorreta' });
     }
 

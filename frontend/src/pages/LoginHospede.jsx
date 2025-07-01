@@ -45,7 +45,6 @@ function LoginHospede() {
         <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} required />
         <button type="submit">Entrar</button>
       </form>
-      
     </div>
   );
 }
