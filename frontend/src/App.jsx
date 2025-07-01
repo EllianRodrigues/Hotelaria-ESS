@@ -11,7 +11,7 @@ import LoginHotel from './pages/LoginHotel';
 import ProfilePage from './pages/ProfilePage';
 import EditHospede from './pages/EditHospede';
 import EditHotel from './pages/EditHotel';
-import ChangePassword from './pages/ChangePassword'; // NOVO: Importa o componente de mudança de senha
+import ChangePassword from './pages/ChangePassword'; 
 import './App.css';
 
 function App() {
@@ -29,7 +29,6 @@ function App() {
             <Route path="/perfil" element={<ProfilePage />} />
             <Route path="/editar-hospede/:id" element={<EditHospede />} />
             <Route path="/editar-hotel/:id" element={<EditHotel />} />
-            {/* NOVA ROTA para alterar senha */}
             <Route path="/alterar-senha" element={<ChangePassword />} />
           </Routes>
         </div>

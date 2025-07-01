@@ -26,11 +26,11 @@ function LoginHotel() {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      const { user } = await response.json(); // Backend retorna { user: { id, nome, email, cnpj, tipo } }
-      login(user); // Passa o objeto user completo para o contexto de autenticação
+      const { user } = await response.json(); 
+      login(user); 
 
       alert('Login de Hotel bem-sucedido!');
-      navigate('/'); // Redireciona para a página inicial
+      navigate('/'); 
     } catch (error) {
       console.error('Erro no login do hotel:', error);
       alert('Erro no login: ' + error.message);

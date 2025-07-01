@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 function ChangePassword() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [currentPassword, setCurrentPassword] = useState(''); // NOVO ESTADO
+  const [currentPassword, setCurrentPassword] = useState(''); 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,10 +40,10 @@ function ChangePassword() {
 
     if (user.tipo === 'hospede') {
       backendUrl = `http://localhost:3000/api/hospedes/${user.id}/password`;
-      bodyData = { currentPassword, newPassword, loggedInCpf: user.cpf }; // NOVO: currentPassword
+      bodyData = { currentPassword, newPassword, loggedInCpf: user.cpf }; 
     } else if (user.tipo === 'hotel') {
       backendUrl = `http://localhost:3000/api/hotels/${user.id}/password`;
-      bodyData = { currentPassword, newPassword, loggedInCnpj: user.cnpj }; // NOVO: currentPassword
+      bodyData = { currentPassword, newPassword, loggedInCnpj: user.cnpj }; 
     } else {
       setError('Tipo de usuário desconhecido para mudança de senha.');
       setLoading(false);
@@ -65,10 +65,10 @@ function ChangePassword() {
       }
 
       alert('Senha atualizada com sucesso!');
-      setCurrentPassword(''); // Limpa os campos após sucesso
+      setCurrentPassword(''); 
       setNewPassword('');
       setConfirmPassword('');
-      navigate('/'); // Volta para a página do perfil
+      navigate('/'); 
     } catch (err) {
       console.error('Erro ao atualizar senha:', err);
       setError('Erro ao atualizar senha: ' + err.message);
@@ -84,7 +84,6 @@ function ChangePassword() {
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h2>Alterar Senha ({user.tipo === 'hospede' ? 'Hóspede' : 'Hotel'} - {user.nome})</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-        {/* NOVO CAMPO: Senha Atual */}
         <input type="password" placeholder="Senha Atual" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
         <input type="password" placeholder="Nova Senha" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
         <input type="password" placeholder="Confirme a Nova Senha" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />

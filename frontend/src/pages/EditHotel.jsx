@@ -1,6 +1,6 @@
 // src/pages/EditHotel.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom'; // Importe 'Link'
+import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext.jsx';
 
 function EditHotel() {

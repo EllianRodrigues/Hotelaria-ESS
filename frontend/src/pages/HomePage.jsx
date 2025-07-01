@@ -7,7 +7,6 @@ function HomePage() {
 
   const backendBaseUrl = 'http://localhost:3000/api';
 
-  // Função para buscar hóspedes
   const fetchHospedes = async () => {
     try {
       const response = await fetch(`${backendBaseUrl}/hospedes`);
@@ -21,7 +20,6 @@ function HomePage() {
     }
   };
 
-  // Função para buscar hotéis
   const fetchHotels = async () => {
     try {
       const response = await fetch(`${backendBaseUrl}/hotels`);
@@ -35,7 +33,6 @@ function HomePage() {
     }
   };
 
-  // Buscar dados ao carregar o componente
   useEffect(() => {
     fetchHospedes();
     fetchHotels();
@@ -43,8 +40,7 @@ function HomePage() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Bem-vindo à Plataforma de Gerenciamento!</h2>
-      <p>Utilize a navegação acima para registrar novos hóspedes ou hotéis.</p>
+      <h2>Use a NavBar para fazer login/registrar/editar hospede e hotel</h2>
 
       {/* Exibição da Lista de Hóspedes */}
       <hr />

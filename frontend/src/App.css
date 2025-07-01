@@ -13,17 +13,16 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100%; /* Garante que ocupa toda a largura */
-  padding: 0; /* Remove padding padrão */
+  width: 100%; 
+  padding: 0; 
 }
 
 .main-content {
   flex-grow: 1;
-  padding: 20px; /* Padding interno para o conteúdo da página */
-  box-sizing: border-box; /* Garante que padding não adicione largura extra */
+  padding: 20px; 
+  box-sizing: border-box; 
 }
 
-/* Estilos gerais para formulários e botões */
 form {
   display: flex;
   flex-direction: column;

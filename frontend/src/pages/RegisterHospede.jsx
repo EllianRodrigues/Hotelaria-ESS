@@ -27,9 +27,9 @@ function RegisterHospede() {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      setFormData({ nome: '', email: '', cpf: '', senha: '' }); // Limpa o form
+      setFormData({ nome: '', email: '', cpf: '', senha: '' }); 
       alert('Hóspede registrado com sucesso!');
-      navigate('/'); // Redireciona para a página inicial
+      navigate('/'); 
     } catch (error) {
       console.error('Erro ao registrar hóspede:', error);
       alert('Erro ao registrar hóspede: ' + error.message);

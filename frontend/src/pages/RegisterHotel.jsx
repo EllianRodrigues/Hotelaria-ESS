@@ -27,9 +27,9 @@ function RegisterHotel() {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      setFormData({ nome: '', email: '', cnpj: '', senha: '' }); // Limpa o form
+      setFormData({ nome: '', email: '', cnpj: '', senha: '' }); 
       alert('Hotel registrado com sucesso!');
-      navigate('/'); // Redireciona para a página inicial
+      navigate('/'); 
     } catch (error) {
       console.error('Erro ao registrar hotel:', error);
       alert('Erro ao registrar hotel: ' + error.message);
