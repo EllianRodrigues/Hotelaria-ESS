@@ -53,4 +53,4 @@ npm test -- --reporter spec --timeout 15000
 
 ## Banco de Dados
 
-### Até esse momento (03/0725) não limpamos o BD após cada teste, então se for rodar os testes mais de uma vez por favor EXCLUA o BD.
+### Até esse momento (03/07/25) não limpamos o BD após cada teste, então se for rodar os testes mais de uma vez por favor EXCLUA o BD.
