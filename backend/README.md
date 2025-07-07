@@ -127,3 +127,29 @@ A API estará disponível em:
 - `POST   /api/rooms` – Cria um novo quarto
 - `PATCH  /api/rooms/:id` – Atualiza parcialmente um quarto
 - `DELETE /api/rooms/:id` – Remove um quarto
+
+---
+
+## 🧪 Rodando os Testes
+
+### Localmente
+
+1. Instale as dependências de desenvolvimento:
+   ```bash
+   npm install
+   ```
+2. Execute os testes:
+   ```bash
+   npm test
+   ```
+
+### Com Docker
+
+1. Build da imagem (inclui dependências de desenvolvimento):
+   ```bash
+   docker build -t express-sqlite-mvc-api .
+   ```
+2. Execute os testes no container:
+   ```bash
+   docker run --rm express-sqlite-mvc-api npm test
+   ```
