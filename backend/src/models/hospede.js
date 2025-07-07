@@ -1,30 +1,30 @@
 const db = require('../sqlite/db');
 
-const Hotel = {
+const Hospede = {
   getAll: () => {
     return new Promise((resolve, reject) => {
-      db.all('SELECT id, nome, email, cnpj FROM hotel', [], (err, rows) => {
+      db.all('SELECT id, nome, email, cpf FROM hospede', [], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
     });
   },
 
-  create: (nome, email, cnpj, senha) => {
+  create: (nome, email, cpf, senha) => {
     return new Promise((resolve, reject) => {
-      db.run('INSERT INTO hotel (nome, email, cnpj, senha) VALUES (?, ?, ?, ?)',
-        [nome, email, cnpj, senha],
+      db.run('INSERT INTO hospede (nome, email, cpf, senha) VALUES (?, ?, ?, ?)',
+        [nome, email, cpf, senha],
         function (err) {
           if (err) reject(err);
-          else resolve({ id: this.lastID, nome, email, cnpj });
+          else resolve({ id: this.lastID, nome, email, cpf });
         }
       );
     });
   },
 
-  findByCnpj: (cnpj) => {
+  findByCpf: (cpf) => {
     return new Promise((resolve, reject) => {
-      db.get('SELECT * FROM hotel WHERE cnpj = ?', [cnpj], (err, row) => {
+      db.get('SELECT * FROM hospede WHERE cpf = ?', [cpf], (err, row) => {
         if (err) reject(err);
         else resolve(row);
       });
@@ -35,38 +35,38 @@ const Hotel = {
     return providedPassword === storedPassword;
   },
 
-  updateByIdAndCnpj: (id, nome, email, cnpj, loggedInCnpj) => {
+  updateByIdAndCpf: (id, nome, email, cpf, loggedInCpf) => {
     return new Promise((resolve, reject) => {
-      db.run('UPDATE hotel SET nome = ?, email = ?, cnpj = ? WHERE id = ? AND cnpj = ?',
-        [nome, email, cnpj, id, loggedInCnpj], 
+      db.run('UPDATE hospede SET nome = ?, email = ?, cpf = ? WHERE id = ? AND cpf = ?',
+        [nome, email, cpf, id, loggedInCpf],
         function (err) {
           if (err) reject(err);
-          else resolve(this.changes > 0 ? { id, nome, email, cnpj } : null);
+          else resolve(this.changes > 0 ? { id, nome, email, cpf } : null);
         }
       );
     });
   },
 
-   findById: (id) => {
+  findById: (id) => {
     return new Promise((resolve, reject) => {
-      db.get('SELECT id, nome, email, cnpj FROM hotel WHERE id = ?', [id], (err, row) => {
+      db.get('SELECT id, nome, email, cpf FROM hospede WHERE id = ?', [id], (err, row) => {
         if (err) reject(err);
         else resolve(row); 
       });
     });
   },
 
-   updatePassword: (id, currentPassword, newPassword, loggedInCnpj) => {
+  updatePassword: (id, currentPassword, newPassword, loggedInCpf) => {
     return new Promise((resolve, reject) => { 
-      db.get('SELECT senha FROM hotel WHERE id = ? AND cnpj = ?', [id, loggedInCnpj], (err, row) => {
+      db.get('SELECT senha FROM hospede WHERE id = ? AND cpf = ?', [id, loggedInCpf], (err, row) => {
         if (err) return reject(err);
         if (!row) return resolve(false);
 
-        if (!Hotel.checkPassword(currentPassword, row.senha)) {
+        if (!Hospede.checkPassword(currentPassword, row.senha)) {
           return resolve(false);
         }
 
-        db.run('UPDATE hotel SET senha = ? WHERE id = ?',
+        db.run('UPDATE hospede SET senha = ? WHERE id = ?',
           [newPassword, id],
           function (err) {
             if (err) reject(err);
@@ -78,4 +78,4 @@ const Hotel = {
   }
 };
 
-module.exports = Hotel;
+module.exports = Hospede;
