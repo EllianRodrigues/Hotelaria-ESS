@@ -1,17 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const hotelRouter = require('./hotelRouter');
-const reservationRouter = require('./reservationRouter');
-const roomRouter = require('./roomRouter');
-const userController = require('../controllers/userController');
+import express from 'express';
+import reservationRouter from './reservationRouter.js';
+import roomRouter from './roomRouter.js';
+import hospedeController from '../controllers/hospedeController.js';
+import hotelController from '../controllers/hotelController.js';
+import authRouter from './authRouter.js';
 
-const hospedeController = require('../controllers/hospedeController');
-const hotelController = require('../controllers/hotelController');
-const authRouter = require('./authRouter');
+const router = express.Router();
 
 // router.use('/hotels', hotelRouter)
-router.use('/rooms', roomRouter)
-router.use('/reservations', reservationRouter)
+router.use('/rooms', roomRouter);
+router.use('/reservations', reservationRouter);
 // router.get('/users', userController.getAllUsers);
 
 //////////////Ellian//////////////////////
@@ -33,4 +31,4 @@ router.put('/hotels/:id/password', hotelController.updateHotelPassword);
 router.use('/auth', authRouter);
 /////////////////////////////////////////
 
-module.exports = router; 
+export default router; 

@@ -6,4 +6,4 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-    command: npx nodemon server.js
+    command: npx nodemon src/server.js

@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { createHotel } from '../controllers/hotelController.js';
+
 const router = express.Router();
-const { createHotel } = require('../controllers/hotelController');
 
 router.post('/', createHotel);
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const Reservation = require('../models/reservation');
+import Reservation from '../models/reservation.js';
 
-exports.createReservation = async (req, res) => {
+export async function createReservation(req, res) {
     try {
       const { name, start_date, end_date, room_id } = req.body;
   
@@ -16,3 +16,5 @@ exports.createReservation = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  export default { createReservation };

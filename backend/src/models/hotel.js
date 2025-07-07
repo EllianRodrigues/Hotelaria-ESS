@@ -1,9 +1,9 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Hotel = {
   getAll: () => {
     return new Promise((resolve, reject) => {
-      db.all('SELECT id, nome, email, cnpj FROM hotel', [], (err, rows) => {
+      db.all('SELECT id, nome, email, cnpj FROM hotels', [], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
@@ -12,7 +12,7 @@ const Hotel = {
 
   create: (nome, email, cnpj, senha) => {
     return new Promise((resolve, reject) => {
-      db.run('INSERT INTO hotel (nome, email, cnpj, senha) VALUES (?, ?, ?, ?)',
+      db.run('INSERT INTO hotels (nome, email, cnpj, senha) VALUES (?, ?, ?, ?)',
         [nome, email, cnpj, senha],
         function (err) {
           if (err) reject(err);
@@ -24,7 +24,7 @@ const Hotel = {
 
   findByCnpj: (cnpj) => {
     return new Promise((resolve, reject) => {
-      db.get('SELECT * FROM hotel WHERE cnpj = ?', [cnpj], (err, row) => {
+      db.get('SELECT * FROM hotels WHERE cnpj = ?', [cnpj], (err, row) => {
         if (err) reject(err);
         else resolve(row);
       });
@@ -37,7 +37,7 @@ const Hotel = {
 
   updateByIdAndCnpj: (id, nome, email, cnpj, loggedInCnpj) => {
     return new Promise((resolve, reject) => {
-      db.run('UPDATE hotel SET nome = ?, email = ?, cnpj = ? WHERE id = ? AND cnpj = ?',
+      db.run('UPDATE hotels SET nome = ?, email = ?, cnpj = ? WHERE id = ? AND cnpj = ?',
         [nome, email, cnpj, id, loggedInCnpj], 
         function (err) {
           if (err) reject(err);
@@ -49,7 +49,7 @@ const Hotel = {
 
    findById: (id) => {
     return new Promise((resolve, reject) => {
-      db.get('SELECT id, nome, email, cnpj FROM hotel WHERE id = ?', [id], (err, row) => {
+      db.get('SELECT id, nome, email, cnpj FROM hotels WHERE id = ?', [id], (err, row) => {
         if (err) reject(err);
         else resolve(row); 
       });
@@ -58,7 +58,7 @@ const Hotel = {
 
    updatePassword: (id, currentPassword, newPassword, loggedInCnpj) => {
     return new Promise((resolve, reject) => { 
-      db.get('SELECT senha FROM hotel WHERE id = ? AND cnpj = ?', [id, loggedInCnpj], (err, row) => {
+      db.get('SELECT senha FROM hotels WHERE id = ? AND cnpj = ?', [id, loggedInCnpj], (err, row) => {
         if (err) return reject(err);
         if (!row) return resolve(false);
 
@@ -66,7 +66,7 @@ const Hotel = {
           return resolve(false);
         }
 
-        db.run('UPDATE hotel SET senha = ? WHERE id = ?',
+        db.run('UPDATE hotels SET senha = ? WHERE id = ?',
           [newPassword, id],
           function (err) {
             if (err) reject(err);
@@ -78,4 +78,4 @@ const Hotel = {
   }
 };
 
-module.exports = Hotel;
+export default Hotel;

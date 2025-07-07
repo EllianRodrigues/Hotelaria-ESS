@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Hospede = {
   getAll: () => {
@@ -78,4 +78,4 @@ const Hospede = {
   }
 };
 
-module.exports = Hospede;
+export default Hospede;

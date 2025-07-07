@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Room = {
   getAll: (filters = {}) => {
@@ -78,30 +78,32 @@ const Room = {
     const sql = `
     SELECT
       rooms.*,
+      hotels.id,
       hotels.city,
       reservations.id AS reservation_id,
       reservations.start_date,
       reservations.end_date
     FROM rooms
-    JOIN reservations ON rooms.id = reservations.room_id
-    JOIN hotels ON rooms.hotel_id = hotels.id
+    LEFT JOIN reservations ON rooms.id = reservations.room_id
+    LEFT JOIN hotels ON rooms.hotel_id = hotels.id
     WHERE
       hotels.city = ?
       AND rooms.n_of_adults >= ?
-      AND NOT (
+      AND (reservations.id IS NULL OR NOT (
         (? <= reservations.start_date AND ? >= reservations.end_date)
         OR (? <= reservations.end_date AND ? > reservations.start_date)
         OR (? < reservations.end_date AND ? >= reservations.start_date)
         )
+      )
     ORDER BY rooms.id, reservations.start_date;
     `;
         
         const params = [
           city,
-          nOfAdults,
-          startDate, endDate,
-          startDate, endDate,
-          startDate, endDate
+          nOfAdults
+          // startDate, endDate,
+          // startDate, endDate,
+          // startDate, endDate
         ];
   
     return new Promise((resolve, reject) => {
@@ -198,4 +200,4 @@ const Room = {
   }
 };
 
-module.exports = Room;
+export default Room;

@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Reservation = {
     create: ({ name, start_date, end_date, room_id }) => {
@@ -24,4 +24,4 @@ const Reservation = {
       }
 }
 
-module.exports = Reservation
+export default Reservation
