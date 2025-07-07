@@ -145,27 +145,13 @@ const Room = {
     const { identifier, type, n_of_adults, description, cost, photos, hotel_id } = room;
 
     return new Promise((resolve, reject) => {
-      // Check for duplicate
-      db.get(
-        `SELECT id FROM rooms WHERE identifier = ? AND type = ? AND hotel_id = ?`,
-        [identifier, type, hotel_id],
-        (err, existingRoom) => {
+      db.run(
+        `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, hotel_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), hotel_id],
+        function (err) {
           if (err) return reject(err);
-
-          if (existingRoom) {
-            return reject(new Error('Room with same identifier, type, and hotel_id already exists'));
-          }
-
-          // Insert new room
-          db.run(
-            `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, hotel_id)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), hotel_id],
-            function (err) {
-              if (err) return reject(err);
-              resolve({ id: this.lastID, ...room });
-            }
-          );
+          resolve({ id: this.lastID, ...room });
         }
       );
     });

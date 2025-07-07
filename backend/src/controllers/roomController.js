@@ -69,12 +69,18 @@ export async function createRoom(req, res) {
       return res.status(400).json({ error: 'Incomplete information' });
     }
 
+    const existingRooms = await Room.getAll({
+      identifier: req.body.identifier,
+      type: req.body.type,
+      hotel_id: req.body.hotel_id
+    });
+    if (existingRooms.length > 0) {
+      return res.status(409).json({ error: 'Room with same identifier, type, and hotel_id already exists' });
+    }
+
     const newRoom = await Room.create(req.body);
     res.status(201).json(newRoom);
   } catch (error) {
-    if (error.message.includes('already exists')) {
-      return res.status(409).json({ error: error.message }); // Conflict
-    }
     res.status(400).json({ error: error.message });
   }
 }

@@ -143,4 +143,41 @@ describe('Room Service BDD', function () {
       }
     });
   });
+
+
+  describe('Room duplicate creation', function() {
+    it('deve retornar erro 409 ao tentar criar um quarto já existente', async function() {
+      try {
+        // Cria room
+        const res1 = await request.execute(app)
+          .post('/api/rooms')
+          .send({
+            identifier: 102,
+            type: 'lodge',
+            n_of_adults: 2,
+            description: 'Quarto confortável',
+            cost: 200,
+            photos: ['quarto1.png'],
+            hotel_id: hotelId
+          });
+        expect(res1).to.have.status(201);
+        // Tenta criar o mesmo room novamente
+        const res2 = await request.execute(app)
+          .post('/api/rooms')
+          .send({
+            identifier: 102,
+            type: 'lodge',
+            n_of_adults: 2,
+            description: 'Quarto confortável',
+            cost: 200,
+            photos: ['quarto1.png'],
+            hotel_id: hotelId
+          });
+        expect(res2).to.have.status(409);
+        expect(res2.body).to.have.property('error').that.includes('Room with same identifier, type, and hotel_id already exists');
+      } catch (err) {
+        throw new Error('Erro no teste de room duplicado: ' + err.message);
+      }
+    });
+  });
 }); 
