@@ -11,14 +11,14 @@ Scenario: Incomplete hotel room search
   And the error message states "Incomplete information"
   
 Scenario: Successful publishing of a hotel room
-  Given that there is no hotel room with identifier "30" under type "lodge" in the system for the hotel with identifier "1"
+  Given that there is no hotel room with identifier "30" under type "lodge" in the system for the hotel with ID "1"
   When a request is made to add a new hotel room with: type "lodge", "n_of_adults" "2", "cost" "100.00", "photos" ["example.png"], "identifier" "30", hotel_id "1"
   Then the service creates the hotel room
   And returns a success response with the code "201"
   And the response includes the room identifier "30" and the type "lodge"
 
 Scenario: Unsuccessful publishing of a hotel room
-  Given that the system does not contain a hotel room with missing required fields (e.g., missing identifier)
+  Given that the system has a hotel with ID "1"
   When a request is made to add a new hotel room with: "lodge", "n_of_adults" "2", "cost" "100.00", "photos" ["example.png"], hotel_id "1", but without an identifier
   Then the service returns an error response with the code "400"
   And the error message states "Incomplete information"
