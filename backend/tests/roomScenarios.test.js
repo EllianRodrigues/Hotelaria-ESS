@@ -1,16 +1,16 @@
 import { expect, use } from "chai"; // Import 'expect' and 'use' directly
 import {default as chaiHttp, request} from "chai-http";
-import Hotel from '../../src/models/hotel.js';
-import Room from '../../src/models/room.js';
-import db from '../../src/sqlite/db.js';
-import app from '../../src/server.js';
+import Hotel from '../src/models/hotel.js';
+import Room from '../src/models/room.js';
+import db from '../src/sqlite/db.js';
+import app from '../src/server.js';
 import fs from 'fs';
 import path from 'path';
 use(chaiHttp);
 const server = typeof app === 'function' && app.listen ? app : { close: () => { } };
 
 function extractFeatureData() {
-  const featurePath = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', '..', 'features', 'room', 'serviceScenarios.feature');
+  const featurePath = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'features', 'room', 'serviceScenarios.feature');
   const featureContent = fs.readFileSync(featurePath, 'utf8');
   
   const data = {};
@@ -84,6 +84,14 @@ function extractFeatureData() {
   return data;
 }
 
+async function createTestHotel(name, city) {
+  const email = `random${Math.floor(Math.random() * 1000000)}@test.com`;
+  const cnpj = Math.floor(Math.random() * 90000000000000) + 10000000000000;
+  const password = 'test123';
+  
+  return await Hotel.create(name, email, cnpj.toString(), password);
+}
+
 describe('Room Service BDD', function () {
   let hotelId;
   let featureData;
@@ -95,7 +103,7 @@ describe('Room Service BDD', function () {
   beforeEach(async function () {
     await new Promise((resolve, reject) => db.run('DELETE FROM rooms', err => err ? reject(err) : resolve()));
     await new Promise((resolve, reject) => db.run('DELETE FROM hotels', err => err ? reject(err) : resolve()));
-    const hotel = await Hotel.create('Hotel Recife', 'Recife');
+    const hotel = await createTestHotel('Hotel Recife', 'Recife');
     hotelId = hotel.id;
     await Room.create({
       identifier: 101,
@@ -104,6 +112,7 @@ describe('Room Service BDD', function () {
       description: 'Quarto confortável',
       cost: 200,
       photos: ['quarto1.png'],
+      city: 'Recife',
       hotel_id: hotelId
     });
   });
@@ -116,7 +125,7 @@ describe('Room Service BDD', function () {
   describe('Scenario: Successful hotel room search', function () {
     beforeEach(async function () {
       // Given: available hotel rooms exist in the system for city "Recife" that accommodate "2" adults
-      const hotel = await Hotel.create('Hotel Recife', featureData.successfulSearch.given.city);
+      const hotel = await createTestHotel('Hotel Recife', featureData.successfulSearch.given.city);
       await Room.create({
         identifier: 101,
         type: 'lodge',
@@ -124,6 +133,7 @@ describe('Room Service BDD', function () {
         description: 'Quarto confortável',
         cost: 200,
         photos: ['quarto1.png'],
+        city: featureData.successfulSearch.given.city,
         hotel_id: hotel.id
       });
     });
@@ -150,7 +160,7 @@ describe('Room Service BDD', function () {
   describe('Scenario: Incomplete hotel room search', function () {
     beforeEach(async function () {
       // Given: the system has hotel rooms available for city "Recife" and period "2025-05-01" to "2025-06-10"
-      const hotel = await Hotel.create('Hotel Recife', featureData.incompleteSearch.given.city);
+      const hotel = await createTestHotel('Hotel Recife', featureData.incompleteSearch.given.city);
       await Room.create({
         identifier: 101,
         type: 'lodge',
@@ -158,6 +168,7 @@ describe('Room Service BDD', function () {
         description: 'Quarto confortável',
         cost: 200,
         photos: ['quarto1.png'],
+        city: featureData.incompleteSearch.given.city,
         hotel_id: hotel.id
       });
     });
@@ -184,7 +195,7 @@ describe('Room Service BDD', function () {
     beforeEach(async function () {
       // Given: there is no hotel room with identifier "30" under type "lodge" in the system for the hotel with ID "1"
       // Create hotel with ID 1 (or ensure it exists)
-      const hotel = await Hotel.create('Hotel Test', 'Test City');
+      const hotel = await createTestHotel('Hotel Test', 'Test City');
       // Ensure no room with the specified identifier exists
       await new Promise((resolve, reject) => db.run('DELETE FROM rooms WHERE identifier = ? AND type = ? AND hotel_id = ?', 
         [featureData.successfulPublish.given.noRoomWithIdentifier, featureData.successfulPublish.given.noRoomWithType, parseInt(featureData.successfulPublish.given.hotelId)], 
@@ -201,6 +212,7 @@ describe('Room Service BDD', function () {
             cost: parseFloat(featureData.successfulPublish.cost),
             photos: featureData.successfulPublish.photos,
             identifier: featureData.successfulPublish.identifier,
+            city: 'Test City',
             hotel_id: parseInt(featureData.successfulPublish.hotel_id)
           });
         expect(res).to.have.status(parseInt(featureData.successfulPublish.expectedStatus));
@@ -218,7 +230,7 @@ describe('Room Service BDD', function () {
     beforeEach(async function () {
       // Given: the system has a hotel with ID "1"
       // Ensure hotel with ID 1 exists
-      await Hotel.create('Hotel Test', 'Test City');
+      await createTestHotel('Hotel Test', 'Test City');
     });
 
     it('deve retornar 400 e mensagem de erro para criação incompleta', async function () {
@@ -230,6 +242,7 @@ describe('Room Service BDD', function () {
             n_of_adults: featureData.unsuccessfulPublish.n_of_adults,
             cost: parseFloat(featureData.unsuccessfulPublish.cost),
             photos: featureData.unsuccessfulPublish.photos,
+            city: 'Test City',
             hotel_id: parseInt(featureData.unsuccessfulPublish.hotel_id)
           });
         expect(res).to.have.status(parseInt(featureData.unsuccessfulPublish.expectedStatus));
@@ -283,6 +296,7 @@ describe('Room Service BDD', function () {
             description: 'Quarto confortável',
             cost: 200,
             photos: ['quarto1.png'],
+            city: 'Recife',
             hotel_id: hotelId
           });
         expect(res1).to.have.status(201);
@@ -296,6 +310,7 @@ describe('Room Service BDD', function () {
             description: 'Quarto confortável',
             cost: 200,
             photos: ['quarto1.png'],
+            city: 'Recife',
             hotel_id: hotelId
           });
         expect(res2).to.have.status(409);

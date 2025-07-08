@@ -23,6 +23,10 @@ const Room = {
         conditions.push('hotel_id = ?');
         values.push(filters.hotel_id);
       }
+      if (filters.city) {
+        conditions.push('city = ?');
+        values.push(filters.city);
+      }
   
       if (conditions.length > 0) {
         query += ' WHERE ' + conditions.join(' AND ');
@@ -79,7 +83,6 @@ const Room = {
     SELECT
       rooms.*,
       hotels.id,
-      hotels.city,
       reservations.id AS reservation_id,
       reservations.start_date,
       reservations.end_date
@@ -87,7 +90,7 @@ const Room = {
     LEFT JOIN reservations ON rooms.id = reservations.room_id
     LEFT JOIN hotels ON rooms.hotel_id = hotels.id
     WHERE
-      hotels.city = ?
+      rooms.city = ?
       AND rooms.n_of_adults >= ?
       AND (reservations.id IS NULL OR NOT (
         (? <= reservations.start_date AND ? >= reservations.end_date)
@@ -142,13 +145,13 @@ const Room = {
   },
 
   create: (room) => {
-    const { identifier, type, n_of_adults, description, cost, photos, hotel_id } = room;
+    const { identifier, type, n_of_adults, description, cost, photos, city, hotel_id } = room;
 
     return new Promise((resolve, reject) => {
       db.run(
-        `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, hotel_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), hotel_id],
+        `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, city, hotel_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), city, hotel_id],
         function (err) {
           if (err) return reject(err);
           resolve({ id: this.lastID, ...room });

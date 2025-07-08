@@ -1,7 +1,8 @@
-const chai = require('chai');
-chai.use(require('chai-http'));
-const expect = chai.expect;
-const app = require('../src/server');
+import { expect, use } from 'chai';
+import {default as chaiHttp, request} from "chai-http";
+import app from '../src/server.js';
+
+use(chaiHttp);
 
 describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', () => {
   let server;
@@ -22,7 +23,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
 
   beforeEach((done) => {
     // Buscar o cliente que já foi criado no register.test.js
-    chai.request(server)
+    request.execute(server)
       .get('/api/hospedes')
       .end((err, res) => {
         // Encontrar o cliente com CPF 12345678900
@@ -30,7 +31,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
         clienteId = cliente ? cliente.id : null;
         
         // Buscar o hotel que já foi criado no register.test.js
-        chai.request(server)
+        request.execute(server)
           .get('/api/hotels')
           .end((err, res) => {
             // Encontrar o hotel com CNPJ 12345678900000
@@ -43,7 +44,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
 
   describe('Hospede - Edição de Senha', () => {
     it('Deve editar senha do cliente com sucesso', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hospedes/${clienteId}/password`)
         .send({
           currentPassword: "123",
@@ -58,7 +59,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
     });
 
     it('Deve falhar ao editar senha com senha atual incorreta', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hospedes/${clienteId}/password`)
         .send({
           currentPassword: "senhaErrada",
@@ -73,7 +74,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
     });
 
     it('Deve falhar ao editar senha com campos obrigatórios em branco', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hospedes/${clienteId}/password`)
         .send({
           currentPassword: "",
@@ -90,7 +91,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
 
   describe('Hotel - Edição de Senha', () => {
     it('Deve editar senha do hotel com sucesso', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hotels/${hotelId}/password`)
         .send({
           currentPassword: "123",
@@ -105,7 +106,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
     });
 
     it('Deve falhar ao editar senha com senha atual incorreta', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hotels/${hotelId}/password`)
         .send({
           currentPassword: "senhaErrada",
@@ -120,7 +121,7 @@ describe('Testes de Edição de Senha - Baseado no registrerLoginEdit.feature', 
     });
 
     it('Deve falhar ao editar senha com campos obrigatórios em branco', (done) => {
-      chai.request(server)
+      request.execute(server)
         .put(`/api/hotels/${hotelId}/password`)
         .send({
           currentPassword: "",

@@ -17,7 +17,7 @@ router.get('/hospedes', hospedeController.getAllHospedes);
 router.get('/hotels', hotelController.getAllHotels);
 
 router.post('/hospedes', hospedeController.createHospede);
-router.post('/hotels', hotelController.createHotel);
+router.post('/hotels', hotelController.createHotelFull);
 
 router.get('/hospedes/:id', hospedeController.getHospedeById);
 router.get('/hotels/:id', hotelController.getHotelById); 

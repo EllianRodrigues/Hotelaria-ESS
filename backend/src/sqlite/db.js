@@ -59,6 +59,7 @@ db.serialize(() => {
     description TEXT,
     cost INTEGER NOT NULL,
     photos TEXT,
+    city TEXT NOT NULL,
     hotel_id INTEGER,
     FOREIGN KEY (hotel_id) REFERENCES hotels(id),
     UNIQUE(identifier, type, hotel_id)

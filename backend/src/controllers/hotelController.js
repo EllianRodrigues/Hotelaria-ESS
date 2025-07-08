@@ -1,19 +1,5 @@
 import Hotel from '../models/hotel.js';
 
-export async function createHotel(req, res) {
-  try {
-    const { name, city } = req.body;
-    if (!name || !city) {
-      return res.status(400).json({ error: 'Missing information' });
-    }
-    const newHotel = await Hotel.create(name, city);
-    res.status(201).json(newHotel);
-  } catch (err) {
-    console.error('Error creating hotel:', err);
-    res.status(500).json({ error: err.message });
-  }
-}
-
 export async function getAllHotels(req, res) {
   try {
     const hotels = await Hotel.getAll();
@@ -96,7 +82,6 @@ export async function updateHotelPassword(req, res) {
 }
 
 export default {
-  createHotel,
   getAllHotels,
   createHotelFull,
   updateHotel,

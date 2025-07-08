@@ -65,7 +65,7 @@ export async function getRoomById(req, res) {
  */
 export async function createRoom(req, res) {
   try {
-    if (!req.body.identifier || !req.body.type || !req.body.n_of_adults || !req.body.cost || !req.body.photos || !req.body.hotel_id) {
+    if (!req.body.identifier || !req.body.type || !req.body.n_of_adults || !req.body.cost || !req.body.photos || !req.body.city || !req.body.hotel_id) {
       return res.status(400).json({ error: 'Incomplete information' });
     }
 
