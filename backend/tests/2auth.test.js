@@ -1,7 +1,8 @@
-const chai = require('chai');
-chai.use(require('chai-http'));
-const expect = chai.expect;
-const app = require('../src/server');
+import { expect, use } from 'chai';
+import {default as chaiHttp, request} from "chai-http";
+import app from '../src/server.js';
+
+use(chaiHttp);
 
 describe('Testes de Autenticação', () => {
   let server;
@@ -21,7 +22,7 @@ describe('Testes de Autenticação', () => {
   describe('Hospede - Login', () => {
     it('Deve fazer login de cliente com sucesso', (done) => {
       // Usar o cliente que já foi criado no register.test.js
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hospede/login')
         .send({
           cpf: "12345678900", // CPF do cliente criado no register.test.js
@@ -39,7 +40,7 @@ describe('Testes de Autenticação', () => {
     });
 
     it('Deve falhar no login com CPF ou senha incorretos', (done) => {
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hospede/login')
         .send({
           cpf: "12345678900", // CPF existente
@@ -53,7 +54,7 @@ describe('Testes de Autenticação', () => {
     });
 
     it('Deve falhar no login com CPF inexistente', (done) => {
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hospede/login')
         .send({
           cpf: "99999999999",
@@ -70,7 +71,7 @@ describe('Testes de Autenticação', () => {
   describe('Hotel - Login', () => {
     it('Deve fazer login de hotel com sucesso', (done) => {
       // Usar o hotel que já foi criado no register.test.js
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hotel/login')
         .send({
           cnpj: "12345678900000", // CNPJ do hotel criado no register.test.js
@@ -88,7 +89,7 @@ describe('Testes de Autenticação', () => {
     });
 
     it('Deve falhar no login com CNPJ ou senha incorretos', (done) => {
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hotel/login')
         .send({
           cnpj: "12345678900000", // CNPJ existente
@@ -102,7 +103,7 @@ describe('Testes de Autenticação', () => {
     });
 
     it('Deve falhar no login com CNPJ inexistente', (done) => {
-      chai.request(server)
+      request.execute(server)
         .post('/api/auth/hotel/login')
         .send({
           cnpj: "99999999999999",

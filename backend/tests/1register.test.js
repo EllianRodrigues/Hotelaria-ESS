@@ -1,7 +1,8 @@
-const chai = require('chai');
-chai.use(require('chai-http'));
-const expect = chai.expect;
-const app = require('../src/server');
+import { expect, use } from 'chai';
+import {default as chaiHttp, request} from "chai-http";
+import app from '../src/server.js';
+
+use(chaiHttp);
 
 describe('Testes de Cadastro', () => {
   let server;
@@ -27,7 +28,7 @@ describe('Testes de Cadastro', () => {
         cpf: "12345678900"
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hospedes')
         .send(clienteData)
         .end((err, res) => {
@@ -48,7 +49,7 @@ describe('Testes de Cadastro', () => {
         cpf: "" // CPF em branco
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hospedes')
         .send(clienteData)
         .end((err, res) => {
@@ -67,7 +68,7 @@ describe('Testes de Cadastro', () => {
         cpf: "12345678900" // CPF já existente do teste anterior
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hospedes')
         .send(clienteData)
         .end((err, res) => {
@@ -87,7 +88,7 @@ describe('Testes de Cadastro', () => {
         cnpj: "12345678900000"
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hotels')
         .send(hotelData)
         .end((err, res) => {
@@ -108,7 +109,7 @@ describe('Testes de Cadastro', () => {
         cnpj: "" // CNPJ em branco
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hotels')
         .send(hotelData)
         .end((err, res) => {
@@ -127,7 +128,7 @@ describe('Testes de Cadastro', () => {
         cnpj: "12345678900000" // CNPJ já existente do teste anterior
       };
 
-      chai.request(server)
+      request.execute(server)
         .post('/api/hotels')
         .send(hotelData)
         .end((err, res) => {

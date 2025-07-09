@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "A Node.js API using Express, SQLite, and MVC architecture.",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "mocha --timeout 10000 tests/**/*.test.js"
+    "test": "NODE_ENV=test mocha --timeout 10000 tests/**/*.test.js"
   },
   "keywords": [
     "express",
@@ -22,8 +23,10 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
-    "chai-http": "^4.3.0",
+    "@types/chai": "^5.2.2",
+    "@types/express": "^5.0.3",
+    "chai": "^5.2.0",
+    "chai-http": "^5.1.2",
     "mocha": "^11.7.1",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.1"
