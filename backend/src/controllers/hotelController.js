@@ -14,7 +14,7 @@ export async function createHotelFull(req, res) {
   try {
     const { nome, email, cnpj, senha } = req.body;
     if (!nome || !email || !cnpj || !senha) {
-      return res.status(400).json({ error: 'Missing information: nome, email, cnpj, and senha are required.' });
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
     }
     const newHotel = await Hotel.create(nome, email, cnpj, senha);
     res.status(201).json(newHotel);

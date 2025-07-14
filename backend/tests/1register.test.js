@@ -106,7 +106,7 @@ describe('Testes de Cadastro', () => {
         nome: "Paradise",
         email: "paradise.register2@gmail.com",
         senha: "123",
-        cnpj: "" // CNPJ em branco
+        cnpj: ""
       };
 
       request.execute(server)
