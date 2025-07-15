@@ -21,7 +21,29 @@ const Reservation = {
             });
           });
         });
-      }
+      },
+    getAll: () => {
+      return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM reservations', [], (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        });
+      });
+    },
+    deleteById: (id) => {
+      return new Promise((resolve, reject) => {
+        db.run('DELETE FROM reservations WHERE id = ?', [id], function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve({ deleted: this.changes });
+          }
+        });
+      });
+  }
 }
 
 export default Reservation

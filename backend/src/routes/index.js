@@ -4,12 +4,14 @@ import roomRouter from './roomRouter.js';
 import hospedeController from '../controllers/hospedeController.js';
 import hotelController from '../controllers/hotelController.js';
 import authRouter from './authRouter.js';
+import adminRouter from './adminRouter.js';
 
 const router = express.Router();
 
 // router.use('/hotels', hotelRouter)
 router.use('/rooms', roomRouter);
 router.use('/reservations', reservationRouter);
+router.use('/admin', adminRouter);
 // router.get('/users', userController.getAllUsers);
 
 //////////////Ellian//////////////////////
