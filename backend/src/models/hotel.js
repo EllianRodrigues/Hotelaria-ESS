@@ -30,6 +30,15 @@ const Hotel = {
       });
     });
   },
+  // Função para deletar um hotel pelo ID
+  deleteById: (id) => {
+      return new Promise((resolve, reject) => {
+        db.run('DELETE FROM hotels WHERE id = ?', [id], function(err) {
+          if (err) reject(err);
+          else resolve({ deleted: this.changes });
+        });
+      });
+  },
 
   checkPassword: (providedPassword, storedPassword) => {
     return providedPassword === storedPassword;
