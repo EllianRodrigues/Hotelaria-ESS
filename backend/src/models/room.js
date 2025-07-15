@@ -80,33 +80,24 @@ const Room = {
   */
   findAvailableRooms: (startDate, endDate, city, nOfAdults) => {
     const sql = `
-    SELECT
-      rooms.*,
-      hotels.id,
-      reservations.id AS reservation_id,
-      reservations.start_date,
-      reservations.end_date
-    FROM rooms
-    LEFT JOIN reservations ON rooms.id = reservations.room_id
-    LEFT JOIN hotels ON rooms.hotel_id = hotels.id
-    WHERE
-      rooms.city = ?
-      AND rooms.n_of_adults >= ?
-      AND (reservations.id IS NULL OR NOT (
-        (? <= reservations.start_date AND ? >= reservations.end_date)
-        OR (? <= reservations.end_date AND ? > reservations.start_date)
-        OR (? < reservations.end_date AND ? >= reservations.start_date)
-        )
-      )
-    ORDER BY rooms.id, reservations.start_date;
+    SELECT r.*, res.id AS reservation_id FROM 'rooms' r
+JOIN hotels on hotels.id = r.hotel_id
+LEFT JOIN reservations res ON r.id = res.room_id
+WHERE r.city = ?
+AND r.n_of_adults >= ?
+AND (res.id IS null OR NOT (
+        (? <= res.start_date AND ? >= res.end_date)
+        OR (? <= res.end_date AND ? > res.start_date)
+        OR (? < res.end_date AND ? >= res.start_date)
+        ))
     `;
         
         const params = [
           city,
-          nOfAdults
-          // startDate, endDate,
-          // startDate, endDate,
-          // startDate, endDate
+          nOfAdults,
+          startDate, endDate,
+          startDate, endDate,
+          startDate, endDate
         ];
   
     return new Promise((resolve, reject) => {
