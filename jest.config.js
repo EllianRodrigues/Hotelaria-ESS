@@ -2,14 +2,12 @@
 
 module.exports = {
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.js', '**/?(*.)+(spec|test).js'],
+  testMatch: ['**/__tests__/**/*.test.js'],
   collectCoverageFrom: [
     'backend/**/*.js',
-    '!backend/database/seedData.js',
-    '!**/node_modules/**'
+    '!backend/__tests__/**',
+    '!backend/database/hotelaria.db'
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'html'],
-  verbose: true,
-  testTimeout: 10000
+  coverageReporters: ['text', 'lcov', 'html']
 }; 
