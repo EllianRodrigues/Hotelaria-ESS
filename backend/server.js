@@ -9,7 +9,7 @@ const path = require('path');
 
 // Importar configurações
 const config = require('./config/config');
-const database = require('./database/database');
+const database = require('./database/grupoDatabase');
 
 // Importar rotas
 const estatisticasRoutes = require('./routes/statisticsRoutes');

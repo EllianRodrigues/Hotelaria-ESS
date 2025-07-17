@@ -1,6 +1,6 @@
 // Feito por Juliano Matheus Ferreira
 
-const db = require('../database/database');
+const db = require('../database/grupoDatabase');
 
 // Cache simples para melhorar performance
 const cache = new Map();
@@ -45,7 +45,7 @@ class Estatisticas {
       const resultado = {};
 
       // Conta hóspedes
-      db.get("SELECT COUNT(*) as total FROM hospedes", (err, row) => {
+      db.get("SELECT COUNT(*) as total FROM hospede", (err, row) => {
         if (err) return reject(err);
         resultado.hospedes = row.total;
 
@@ -59,8 +59,8 @@ class Estatisticas {
             if (err) return reject(err);
             resultado.quartos = row.total;
 
-            // Quartos disponíveis
-            db.get("SELECT COUNT(*) as total FROM rooms WHERE is_available = 1", (err, row) => {
+            // Quartos disponíveis (todos os quartos são considerados disponíveis por padrão)
+            db.get("SELECT COUNT(*) as total FROM rooms", (err, row) => {
               if (err) return reject(err);
               resultado.quartosDisponiveis = row.total;
 
@@ -73,13 +73,13 @@ class Estatisticas {
                 resultado.taxaOcupacao = resultado.quartos > 0 ? 
                   Number(((resultado.quartos - resultado.quartosDisponiveis) / resultado.quartos * 100).toFixed(2)) : 0;
 
-                // Receita total
-                db.get("SELECT SUM(total_price) as total FROM reservations", (err, row) => {
+                // Receita total (calculada pelo custo dos quartos)
+                db.get("SELECT SUM(r.cost) as total FROM reservations res JOIN rooms r ON res.room_id = r.id", (err, row) => {
                   if (err) return reject(err);
                   resultado.receita = row.total || 0;
 
                   // Média de noites
-                  db.get(`SELECT AVG(julianday(check_out_date) - julianday(check_in_date)) as media FROM reservations`, (err, row) => {
+                  db.get(`SELECT AVG(julianday(res.end_date) - julianday(res.start_date)) as media FROM reservations res`, (err, row) => {
                     if (err) return reject(err);
                     resultado.mediaNoites = row.media ? Number(row.media.toFixed(1)) : 0;
 
@@ -110,12 +110,10 @@ class Estatisticas {
 
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT h.city, COUNT(DISTINCT h.id) as hoteis, COUNT(r.id) as quartos,
-          COUNT(CASE WHEN r.is_available = 1 THEN 1 END) as disponiveis,
-          COUNT(CASE WHEN r.is_available = 0 THEN 1 END) as ocupados
-        FROM hotels h
-        LEFT JOIN rooms r ON h.id = r.hotel_id
-        GROUP BY h.city
+        SELECT r.city, COUNT(DISTINCT r.hotel_id) as hoteis, COUNT(r.id) as quartos,
+          COUNT(r.id) as disponiveis, 0 as ocupados
+        FROM rooms r
+        GROUP BY r.city
         ORDER BY quartos DESC
       `;
       
@@ -146,12 +144,13 @@ class Estatisticas {
 
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT strftime('%Y-%m', check_in_date) as mes,
+        SELECT strftime('%Y-%m', res.start_date) as mes,
           COUNT(*) as reservas,
-          SUM(total_price) as receita,
-          AVG(total_price) as ticketMedio
-        FROM reservations
-        GROUP BY strftime('%Y-%m', check_in_date)
+          SUM(r.cost) as receita,
+          AVG(r.cost) as ticketMedio
+        FROM reservations res
+        JOIN rooms r ON res.room_id = r.id
+        GROUP BY strftime('%Y-%m', res.start_date)
         ORDER BY mes DESC
         LIMIT 12
       `;
@@ -180,12 +179,12 @@ class Estatisticas {
 
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT h.name as hotel, h.city, COUNT(res.id) as reservas,
-          SUM(res.total_price) as receita, AVG(res.total_price) as ticketMedio
+        SELECT h.nome as hotel, r.city, COUNT(res.id) as reservas,
+          SUM(r.cost) as receita, AVG(r.cost) as ticketMedio
         FROM hotels h
         LEFT JOIN rooms r ON h.id = r.hotel_id
         LEFT JOIN reservations res ON r.id = res.room_id
-        GROUP BY h.id, h.name, h.city
+        GROUP BY h.id, h.nome, r.city
         HAVING reservas > 0
         ORDER BY receita DESC
         LIMIT 10
@@ -217,9 +216,8 @@ class Estatisticas {
     return new Promise((resolve, reject) => {
       const sql = `
         SELECT type as tipo, COUNT(*) as quartos,
-          COUNT(CASE WHEN is_available = 1 THEN 1 END) as disponiveis,
-          COUNT(CASE WHEN is_available = 0 THEN 1 END) as ocupados,
-          AVG(price_per_night) as precoMedio
+          COUNT(*) as disponiveis, 0 as ocupados,
+          AVG(cost) as precoMedio
         FROM rooms
         GROUP BY type
         ORDER BY quartos DESC
@@ -253,14 +251,15 @@ class Estatisticas {
     return new Promise((resolve, reject) => {
       const sql = `
         SELECT CASE 
-            WHEN strftime('%m', check_in_date) IN ('12', '01', '02') THEN 'Verão'
-            WHEN strftime('%m', check_in_date) IN ('03', '04', '05') THEN 'Outono'
-            WHEN strftime('%m', check_in_date) IN ('06', '07', '08') THEN 'Inverno'
+            WHEN strftime('%m', res.start_date) IN ('12', '01', '02') THEN 'Verão'
+            WHEN strftime('%m', res.start_date) IN ('03', '04', '05') THEN 'Outono'
+            WHEN strftime('%m', res.start_date) IN ('06', '07', '08') THEN 'Inverno'
             ELSE 'Primavera'
           END as estacao,
           COUNT(*) as reservas,
-          AVG(total_price) as ticketMedio
-        FROM reservations
+          AVG(r.cost) as ticketMedio
+        FROM reservations res
+        JOIN rooms r ON res.room_id = r.id
         GROUP BY estacao
         ORDER BY reservas DESC
       `;
@@ -285,13 +284,14 @@ class Estatisticas {
     return new Promise((resolve, reject) => {
       const sql = `
         SELECT 
-          COUNT(DISTINCT hospede_id) as hospedesUnicos,
-          COUNT(DISTINCT room_id) as quartosUtilizados,
-          AVG(julianday(check_out_date) - julianday(check_in_date)) as mediaEstadia,
-          MAX(total_price) as reservaMaisCara,
-          MIN(total_price) as reservaMaisBarata,
-          COUNT(CASE WHEN total_price > 1000 THEN 1 END) as reservasPremium
-        FROM reservations
+          COUNT(DISTINCT res.hospede_id) as hospedesUnicos,
+          COUNT(DISTINCT res.room_id) as quartosUtilizados,
+          AVG(julianday(res.end_date) - julianday(res.start_date)) as mediaEstadia,
+          MAX(r.cost) as reservaMaisCara,
+          MIN(r.cost) as reservaMaisBarata,
+          COUNT(CASE WHEN r.cost > 1000 THEN 1 END) as reservasPremium
+        FROM reservations res
+        JOIN rooms r ON res.room_id = r.id
       `;
       
       db.get(sql, (err, row) => {
@@ -315,11 +315,12 @@ class Estatisticas {
     return new Promise((resolve, reject) => {
       const sql = `
         SELECT 
-          strftime('%Y-%m', check_in_date) as mes,
+          strftime('%Y-%m', res.start_date) as mes,
           COUNT(*) as reservas,
-          SUM(total_price) as receita
-        FROM reservations
-        GROUP BY strftime('%Y-%m', check_in_date)
+          SUM(r.cost) as receita
+        FROM reservations res
+        JOIN rooms r ON res.room_id = r.id
+        GROUP BY strftime('%Y-%m', res.start_date)
         ORDER BY mes ASC
       `;
       
