@@ -1,20 +1,12 @@
-# Sistema de Hotelaria - Projeto ESS
+# 🏨 API de Estatísticas de Hotelaria
 
 **Feito por Juliano Matheus Ferreira**
 
-Este repositório contém um sistema completo de hotelaria, desenvolvido como parte da disciplina de **Engenharia de Software e Sistemas (ESS)**, incluindo funcionalidades avançadas de estatísticas e análise de dados.
+Sistema completo de estatísticas para hotelaria com backend em Node.js, Express e SQLite. Desenvolvido com foco em performance, segurança e facilidade de uso.
 
 ## ✨ Funcionalidades
 
-### 🏨 Sistema Principal
-- **Gestão de Hotéis**: Cadastro e administração de hotéis
-- **Gestão de Quartos**: Controle de disponibilidade e tipos
-- **Gestão de Hóspedes**: Cadastro e histórico de clientes
-- **Sistema de Reservas**: Processo completo de reservas
-- **Autenticação**: Sistema seguro de login e autorização
-- **Painel Administrativo**: Interface para gestão do sistema
-
-### 📊 Estatísticas Avançadas
+### 📊 Estatísticas Disponíveis
 - **Resumo Geral**: Visão completa do sistema
 - **Por Cidade**: Análise de ocupação por localização
 - **Por Mês**: Tendências temporais de reservas
@@ -35,13 +27,7 @@ Este repositório contém um sistema completo de hotelaria, desenvolvido como pa
 
 ## 🛠️ Tecnologias
 
-### Frontend (React)
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-
-### Backend (Node.js)
-- [Node.js](https://nodejs.org/)
-- [Express](https://expressjs.com/)
+- **Backend**: Node.js + Express
 - **Banco**: SQLite3
 - **Segurança**: Helmet, express-rate-limit
 - **Performance**: Compression, cache em memória
@@ -50,22 +36,15 @@ Este repositório contém um sistema completo de hotelaria, desenvolvido como pa
 
 ## 📦 Instalação
 
-### Pré-requisitos:
-- [Node.js](https://nodejs.org/) instalado
-
-### Rodando o Frontend
-
 ```bash
-cd frontend
-npm install
-npm run dev
-```
+# Clonar repositório
+git clone <url-do-repositorio>
+cd Estatistc.Hotel
 
-### Rodando o Backend
-
-```bash
-cd backend
+# Instalar dependências
 npm install
+
+# Iniciar servidor
 npm start
 ```
 
@@ -73,42 +52,77 @@ npm start
 
 ### Endpoints Principais
 
-#### Sistema de Estatísticas
+#### Resumo Geral
 ```bash
-# Resumo Geral
 GET /api/estatisticas/resumo
+```
 
-# Por Cidade
+**Resposta:**
+```json
+{
+  "ok": true,
+  "mensagem": "Resumo geral",
+  "dados": {
+    "hospedes": 8,
+    "hoteis": 5,
+    "quartos": 16,
+    "quartosDisponiveis": 13,
+    "reservas": 10,
+    "taxaOcupacao": 18.75,
+    "receita": 10860,
+    "mediaNoites": 2.4
+  }
+}
+```
+
+#### Por Cidade
+```bash
 GET /api/estatisticas/cidades
+```
 
-# Reservas por Mês
+#### Reservas por Mês
+```bash
 GET /api/estatisticas/meses
+```
 
-# Top Hotéis
+#### Top Hotéis
+```bash
 GET /api/estatisticas/top
+```
 
-# Por Tipo de Quarto
+#### Por Tipo de Quarto
+```bash
 GET /api/estatisticas/tipos-quarto
+```
 
-# Por Estação
+#### Por Estação
+```bash
 GET /api/estatisticas/estacoes
+```
 
-# Métricas Avançadas
+#### Métricas Avançadas
+```bash
 GET /api/estatisticas/metricas-avancadas
+```
 
-# Tendências
+#### Tendências
+```bash
 GET /api/estatisticas/tendencias
+```
 
-# Todas as Estatísticas
+#### Todas as Estatísticas
+```bash
 GET /api/estatisticas/tudo
-
-# Limpar Cache
-POST /api/estatisticas/limpar-cache
 ```
 
 #### Health Check
 ```bash
 GET /health
+```
+
+#### Limpar Cache
+```bash
+POST /api/estatisticas/limpar-cache
 ```
 
 ## 🧪 Testes
@@ -139,19 +153,12 @@ npm run security   # Verificar vulnerabilidades
 ## 📁 Estrutura do Projeto
 
 ```
-projeto-ESS/
-├── frontend/                    # React + Vite
+Estatistc.Hotel/
 ├── backend/
 │   ├── config/
 │   │   └── config.js              # Configurações do sistema
 │   ├── controllers/
-│   │   ├── adminController.js      # Controle administrativo
-│   │   ├── authController.js       # Autenticação
-│   │   ├── hospedeController.js    # Gestão de hóspedes
-│   │   ├── hotelController.js      # Gestão de hotéis
-│   │   ├── reservationController.js # Reservas
-│   │   ├── roomController.js       # Gestão de quartos
-│   │   └── StatisticsController.js # Controladores da API de estatísticas
+│   │   └── StatisticsController.js # Controladores da API
 │   ├── database/
 │   │   └── database.js            # Configuração do banco
 │   ├── models/
@@ -240,14 +247,6 @@ curl http://localhost:3000/health
 }
 ```
 
-## 👥 Equipe 
-
-- **ELLIAN DOS SANTOS RODRIGUES**
-- **ROSEANE OLIVEIRA CAVALCANTE GAMA**
-- **ISAAC FERREIRA SILVA**
-- **JULIANO MATHEUS FERREIRA DA SILVA** *(Desenvolvedor das funcionalidades de Estatísticas)*
-- **LETICIA RODRIGUES PEREIRA FERREIRA**
-
 ## 🤝 Contribuição
 
 1. Fork o projeto
@@ -259,6 +258,10 @@ curl http://localhost:3000/health
 ## 📝 Licença
 
 Este projeto está sob a licença MIT.
+
+## 👨‍💻 Autor
+
+**Juliano Matheus Ferreira**
 
 ---
 
