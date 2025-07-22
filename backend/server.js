@@ -13,6 +13,7 @@ const database = require('./database/grupoDatabase');
 
 // Importar rotas
 const estatisticasRoutes = require('./routes/statisticsRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Criar aplicação
 const app = express();
@@ -97,6 +98,7 @@ app.get('/', (req, res) => {
 
 // Configurar rotas da API
 app.use('/api/estatisticas', estatisticasRoutes);
+app.use('/api/pagamentos', paymentRoutes);
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {

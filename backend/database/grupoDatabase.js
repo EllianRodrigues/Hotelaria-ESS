@@ -4,24 +4,19 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-// Criar conexão com banco do grupo
 const dbPath = path.resolve(__dirname, '../data/database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error('❌ Erro ao conectar ao banco do grupo:', err.message);
-    // Se não existir, criar o banco
-    console.log('Criando banco do grupo...');
+    console.error('Erro ao conectar ao banco do grupo:', err.message);
     inicializarBancoGrupo();
   } else {
-    console.log('✅ Banco do grupo conectado em:', dbPath);
+    console.log('Banco do grupo conectado em:', dbPath);
     verificarEstruturaBanco();
   }
 });
 
-// Função para inicializar banco do grupo
 function inicializarBancoGrupo() {
   db.serialize(() => {
-    // Tabelas do grupo
     db.run(`CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -76,29 +71,38 @@ function inicializarBancoGrupo() {
       FOREIGN KEY (hospede_id) REFERENCES hospede(id)
     )`);
 
-    // Inserir dados de exemplo
+    db.run(`CREATE TABLE IF NOT EXISTS payments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      reserva_id INTEGER NOT NULL,
+      valor REAL NOT NULL,
+      metodo TEXT NOT NULL,
+      status TEXT NOT NULL,
+      data_pagamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+      usuario_id INTEGER,
+      transacao_externa TEXT,
+      observacao TEXT,
+      criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+      atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (reserva_id) REFERENCES reservations(id)
+    )`);
+
     inserirDadosExemplo();
   });
 }
 
-// Verificar estrutura do banco
 function verificarEstruturaBanco() {
   db.get("SELECT COUNT(*) as count FROM hospede", (err, row) => {
     if (err) {
-      console.log('Estrutura do banco não encontrada, criando...');
       inicializarBancoGrupo();
     } else if (row.count === 0) {
-      console.log('Banco vazio, inserindo dados de exemplo...');
       inserirDadosExemplo();
     } else {
-      console.log('✅ Banco do grupo já possui dados');
+      console.log('Banco do grupo já possui dados');
     }
   });
 }
 
-// Inserir dados de exemplo
 function inserirDadosExemplo() {
-  // Inserir hóspedes
   const hospedes = [
     { nome: 'João Silva', email: 'joao@email.com', cpf: '123.456.789-00', senha: '123456' },
     { nome: 'Maria Santos', email: 'maria@email.com', cpf: '987.654.321-00', senha: '123456' },
@@ -112,7 +116,6 @@ function inserirDadosExemplo() {
       [hospede.nome, hospede.email, hospede.cpf, hospede.senha]);
   });
 
-  // Inserir hotéis
   const hoteis = [
     { nome: 'Hotel Copacabana Palace', email: 'contato@copacabana.com', cnpj: '12.345.678/0001-01', senha: '123456' },
     { nome: 'Hotel Fasano', email: 'contato@fasano.com', cnpj: '12.345.678/0001-02', senha: '123456' },
@@ -126,7 +129,6 @@ function inserirDadosExemplo() {
       [hotel.nome, hotel.email, hotel.cnpj, hotel.senha]);
   });
 
-  // Inserir quartos
   const quartos = [
     { identifier: 101, type: 'hotelRoom', n_of_adults: 2, description: 'Quarto Standard', cost: 800, photos: '', city: 'Rio de Janeiro', hotel_id: 1 },
     { identifier: 102, type: 'hotelRoom', n_of_adults: 2, description: 'Quarto Deluxe', cost: 1200, photos: '', city: 'Rio de Janeiro', hotel_id: 1 },
@@ -146,7 +148,6 @@ function inserirDadosExemplo() {
       [quarto.identifier, quarto.type, quarto.n_of_adults, quarto.description, quarto.cost, quarto.photos, quarto.city, quarto.hotel_id]);
   });
 
-  // Inserir reservas
   const reservas = [
     { name: 'Reserva João', start_date: '2024-01-15', end_date: '2024-01-18', room_id: 1, hospede_id: 1 },
     { name: 'Reserva Maria', start_date: '2024-01-20', end_date: '2024-01-25', room_id: 2, hospede_id: 2 },
@@ -160,7 +161,9 @@ function inserirDadosExemplo() {
       [reserva.name, reserva.start_date, reserva.end_date, reserva.room_id, reserva.hospede_id]);
   });
 
-  console.log('✅ Dados de exemplo inseridos com sucesso!');
+  // Exemplo de pagamento já realizado
+  db.run('INSERT OR IGNORE INTO payments (reserva_id, valor, metodo, status, usuario_id, observacao) VALUES (?, ?, ?, ?, ?, ?)',
+    [1, 2400, 'cartao', 'pago', 1, 'Pagamento realizado no check-in']);
 }
 
 module.exports = db; 
