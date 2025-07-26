@@ -3,7 +3,7 @@
 // Configurações do sistema
 const config = {
   // Configurações do servidor
-  porta: process.env.PORT || 3000,
+  porta: process.env.PORT || 3001,
   
   // Configurações do banco
   banco: {

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext.jsx';
+import './EditPages.css';
 
 function EditHotel() {
   const { id } = useParams();
@@ -10,13 +11,14 @@ function EditHotel() {
 
   const [formData, setFormData] = useState({ nome: '', email: '', cnpj: '' });
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const backendUrl = `http://localhost:3000/api/hotels/${id}`;
 
   useEffect(() => {
     if (!user || user.tipo !== 'hotel' || !user.id || !user.cnpj) {
-      alert('Acesso negado. Faça login como hotel para editar seu perfil.');
-      navigate('/login-hotel');
+      showErrorMessage('Acesso negado. Faça login como hotel para editar seu perfil.');
+      setTimeout(() => navigate('/login-hotel'), 2000);
       return;
     }
 
@@ -29,8 +31,8 @@ function EditHotel() {
         const data = await response.json();
 
         if (String(data.id) !== String(user.id) || data.cnpj !== user.cnpj) {
-          alert('Você não tem permissão para editar este perfil.');
-          navigate('/');
+          showErrorMessage('Você não tem permissão para editar este perfil.');
+          setTimeout(() => navigate('/'), 2000);
           return;
         }
 
@@ -52,10 +54,12 @@ function EditHotel() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     if (!user || user.tipo !== 'hotel' || String(user.id) !== String(id)) {
-        alert('Erro de autorização. Recarregue a página e tente novamente.');
-        return;
+      showErrorMessage('Erro de autorização. Recarregue a página e tente novamente.');
+      setIsSubmitting(false);
+      return;
     }
 
     try {
@@ -75,39 +79,160 @@ function EditHotel() {
       const updatedUser = { ...user, ...formData };
       login(updatedUser);
 
-      alert('Hotel atualizado com sucesso!');
-      navigate('/');
+      showSuccessMessage('Perfil atualizado com sucesso!');
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       console.error('Erro ao atualizar hotel:', err);
-      alert('Erro ao atualizar hotel: ' + err.message);
+      showErrorMessage('Erro ao atualizar perfil: ' + err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) return <p style={{ textAlign: 'center' }}>Carregando dados do hotel...</p>;
-  if (error) return <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>;
-  if (!formData.id && !loading) return <p style={{ textAlign: 'center' }}>Hotel não encontrado ou acesso não autorizado.</p>;
+  const showSuccessMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'success-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
+  const showErrorMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'error-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
+  if (loading) {
+    return (
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Carregando dados do hotel...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="error-state">
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!formData.id && !loading) {
+    return (
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="not-found-state">
+            <p>Hotel não encontrado ou acesso não autorizado.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Editar Hotel </h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-        <input type="text" name="nome" placeholder="Nome do Hotel" value={formData.nome || ''} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Email do Hotel" value={formData.email || ''} onChange={handleChange} required />
-        <input type="text" name="cnpj" placeholder="CNPJ" value={formData.cnpj || ''} onChange={handleChange} required />
-        <button type="submit">Atualizar Hotel</button>
-      </form>
+    <div className="edit-container">
+      <div className="edit-card">
+        <div className="edit-header">
+          <div className="edit-icon">🏢</div>
+          <h1>Editar Perfil</h1>
+          <p>Atualize as informações do hotel</p>
+        </div>
 
-      <div style={{ marginTop: '20px' }}>
-        <Link to="/alterar-senha" style={{ 
-          padding: '10px 20px', 
-          backgroundColor: '#6c757d', 
-          color: 'white', 
-          textDecoration: 'none', 
-          borderRadius: '5px',
-          display: 'inline-block' 
-        }}>
-          Alterar Senha
-        </Link>
+        <form onSubmit={handleSubmit} className="edit-form">
+          <div className="form-group">
+            <label htmlFor="nome">Nome do Hotel</label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Digite o nome do hotel"
+                value={formData.nome || ''}
+                onChange={handleChange}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <div className="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Digite o email do hotel"
+                value={formData.email || ''}
+                onChange={handleChange}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="cnpj">CNPJ</label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                id="cnpj"
+                name="cnpj"
+                placeholder="Digite o CNPJ do hotel"
+                value={formData.cnpj || ''}
+                onChange={handleChange}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            className={`edit-button ${isSubmitting ? 'loading' : ''}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <span className="loading-spinner"></span>
+                Atualizando...
+              </>
+            ) : (
+              'Atualizar Perfil'
+            )}
+          </button>
+        </form>
+
+        <div className="action-buttons">
+          <Link to="/alterar-senha" className="action-button secondary-action">
+            Alterar Senha
+          </Link>
+          <Link to="/" className="action-button primary-action">
+            Voltar ao Início
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './AuthPages.css';
 
 function LoginHospede() {
   const [formData, setFormData] = useState({ cpf: '', senha: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
   const backendUrl = 'http://localhost:3000/api/auth/hospede/login';
@@ -14,6 +17,8 @@ function LoginHospede() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       const response = await fetch(backendUrl, {
         method: 'POST',
@@ -29,22 +34,130 @@ function LoginHospede() {
       const { user } = await response.json(); 
       login(user); 
 
-      alert('Login de Hóspede bem-sucedido!');
-      navigate('/'); 
+      // Mostrar mensagem de sucesso
+      showSuccessMessage('Login realizado com sucesso!');
+      setTimeout(() => navigate('/'), 1500);
     } catch (error) {
       console.error('Erro no login do hóspede:', error);
-      alert('Erro no login: ' + error.message);
+      showErrorMessage('Erro no login: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const showSuccessMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'success-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
+  const showErrorMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'error-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Login de Hóspede</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-        <input type="text" name="cpf" placeholder="CPF" value={formData.cpf} onChange={handleChange} required />
-        <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} required />
-        <button type="submit">Entrar</button>
-      </form>
+    <div className="auth-container">
+      <div className="auth-background">
+        <div className="auth-overlay"></div>
+      </div>
+      
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-icon">👤</div>
+          <h1>Bem-vindo de volta!</h1>
+          <p>Faça login para acessar sua conta de hóspede</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="cpf">CPF</label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                id="cpf"
+                name="cpf"
+                placeholder="Digite seu CPF"
+                value={formData.cpf}
+                onChange={handleChange}
+                required
+                className="auth-input"
+              />
+              <span className="input-icon"></span>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="senha">Senha</label>
+            <div className="input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="senha"
+                name="senha"
+                placeholder="Digite sua senha"
+                value={formData.senha}
+                onChange={handleChange}
+                required
+                className="auth-input"
+              />
+              <span className="input-icon"></span>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            className={`auth-button ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading-spinner"></span>
+                Entrando...
+              </>
+            ) : (
+              'Entrar'
+            )}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>Não tem uma conta?</p>
+          <Link to="/registro-hospede" className="auth-link">
+            Criar conta de hóspede
+          </Link>
+        </div>
+
+        
+
+        <div className="auth-options">
+          <Link to="/login-hotel" className="auth-option">
+            <span className="option-icon"></span>
+            Entrar como Hotel
+          </Link>
+          {/* <Link to="/" className="auth-option">
+            <span className="option-icon"></span>
+            Voltar ao Início
+          </Link> */}
+        </div>
+      </div>
     </div>
   );
 }
