@@ -193,21 +193,23 @@
 }
 
 /* Estilos para os quartos encontrados */
-.rooms-grid {
-  margin-bottom: 2rem;
-}
-
-.rooms-grid h3 {
+.rooms-title {
   color: #6b46c1;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(107, 70, 193, 0.1);
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .rooms-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -310,6 +312,11 @@
   .rooms-list {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .rooms-title {
+    font-size: 1.5rem;
+    padding: 0.75rem;
   }
 
   .room-card {

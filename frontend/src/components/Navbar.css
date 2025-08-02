@@ -168,6 +168,8 @@ button.nav-link {
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+  justify-content: center;
+  text-align: center;
 }
 
 .nav-icon {

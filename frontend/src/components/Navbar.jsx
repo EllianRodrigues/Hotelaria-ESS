@@ -57,6 +57,11 @@ function Navbar() {
     setIsAddRoomModalOpen(false);
   };
 
+  const openViewHotelRoomsPage = () => {
+    navigate('/hotel-rooms');
+    closeMobileMenu();
+  };
+
   const handleRoomSearch = (searchData) => {
     // Função para loggar as informações da pesquisa
     logSearchData(searchData);
@@ -148,6 +153,14 @@ function Navbar() {
                 <span className="nav-icon"></span>
                 {user.tipo === 'hospede' ? 'Pesquisar Quartos' : 'Adicionar Quarto'}
               </button>
+              {user.tipo === 'hotel' && (
+                <button 
+                  className="nav-link"
+                  onClick={openViewHotelRoomsPage}
+                >
+                  Ver Quartos
+                </button>
+              )}
               {/* Logout Button */}
               <button onClick={handleLogout} className="nav-link logout-button">
                 Sair
@@ -187,6 +200,7 @@ function Navbar() {
         onAddRoom={handleAddRoom}
         user={user}
       />
+
     </nav>
   );
 }

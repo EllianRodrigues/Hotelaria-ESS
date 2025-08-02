@@ -96,19 +96,30 @@ function SearchResults() {
             <p>Tente ajustar as datas ou a cidade.</p>
           </div>
         ) : (
-          <div className="rooms-grid">
-            <h3>Quartos Encontrados ({rooms.length})</h3>
+          <div>
+            <h3 className="rooms-title">Quartos Encontrados ({rooms.length})</h3>
             <div className="rooms-list">
               {rooms.map((room, index) => (
-                <div key={index} className="room-card">
+                <div key={`room-${room.identifier}-${index}`} className="room-card">
                   <div className="room-header">
-                    <h4>Quarto {room.identifier} - {room.type}</h4>
+                    <h4>Quarto {room.identifier} - {room.type === 'hotelRoom' ? 'Quarto de Hotel' : 'Chalé'}</h4>
                     <span className="room-price">R$ {room.cost}/noite</span>
                   </div>
                   <div className="room-details">
-                    <p><strong>Cidade:</strong> {room.city}</p>
-                    <p><strong>Capacidade:</strong> {room.n_of_adults} {room.n_of_adults === 1 ? 'adulto' : 'adultos'}</p>
-                    {room.description && <p><strong>Descrição:</strong> {room.description}</p>}
+                    <p>
+                      <strong>Cidade:</strong> 
+                      <span>{room.city}</span>
+                    </p>
+                    <p>
+                      <strong>Capacidade:</strong> 
+                      <span>{room.n_of_adults} {room.n_of_adults === 1 ? 'adulto' : 'adultos'}</span>
+                    </p>
+                    {room.description && (
+                      <p>
+                        <strong>Descrição:</strong> 
+                        <span>{room.description}</span>
+                      </p>
+                    )}
                   </div>
                   {room.photos && room.photos.length > 0 && (
                     <div className="room-photos">
@@ -118,7 +129,7 @@ function SearchResults() {
                           <img 
                             key={photoIndex} 
                             src={photo} 
-                            alt={`Foto ${photoIndex + 1}`}
+                            alt={`Foto ${photoIndex + 1} do quarto ${room.identifier}`}
                             className="room-photo"
                           />
                         ))}

@@ -58,16 +58,6 @@ async function seedRooms() {
         hotel_id: hotel1.id
       },
       {
-        identifier: 201,
-        type: 'hotelRoom',
-        n_of_adults: 2,
-        description: 'Quarto moderno no centro da cidade',
-        cost: 300,
-        photos: ['quarto3.jpg'],
-        city: 'São Paulo',
-        hotel_id: hotel2.id
-      },
-      {
         identifier: 202,
         type: 'lodge',
         n_of_adults: 4,
