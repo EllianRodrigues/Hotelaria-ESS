@@ -161,6 +161,15 @@
   box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
 }
 
+/* Garantir que botões com nav-link tenham a aparência correta */
+button.nav-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
 .nav-icon {
   font-size: 1.1rem;
 }

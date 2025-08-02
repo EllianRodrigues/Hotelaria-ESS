@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx'; 
 import RegisterDropdown from './RegisterDropdown';
 import LoginDropdown from './LoginDropdown';
+import RoomSearchModal from './RoomSearchModal';
 import './Navbar.css';
 
 function Navbar() {
@@ -11,6 +12,7 @@ function Navbar() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isRoomSearchModalOpen, setIsRoomSearchModalOpen] = useState(false);
 
   // Detectar scroll para mudar o estilo da navbar
   useEffect(() => {
@@ -33,6 +35,41 @@ function Navbar() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const openRoomSearchModal = () => {
+    setIsRoomSearchModalOpen(true);
+    closeMobileMenu();
+  };
+
+  const closeRoomSearchModal = () => {
+    setIsRoomSearchModalOpen(false);
+  };
+
+  const handleRoomSearch = (searchData) => {
+    // Função para loggar as informações da pesquisa
+    logSearchData(searchData);
+    
+    // Navegar para a página de resultados com os dados
+    navigate('/search-results', { state: { searchData } });
+  };
+
+  // Função para loggar os dados da pesquisa
+  const logSearchData = (data) => {
+    console.log('=== DADOS DA PESQUISA DE QUARTOS ===');
+    console.log('Cidade:', data.city);
+    console.log('Número de adultos:', data.n_of_adults);
+    console.log('Data de início:', data.start_date);
+    console.log('Data de fim:', data.end_date);
+    console.log('Data e hora da pesquisa:', new Date().toLocaleString('pt-BR'));
+    console.log('Usuário logado:', user ? `${user.nome} (${user.tipo})` : 'Não logado');
+    console.log('=====================================');
+    
+    // Aqui você pode adicionar mais lógica como:
+    // - Salvar no localStorage
+    // - Enviar para uma API
+    // - Salvar no histórico de pesquisas
+    // - Analytics/tracking
   };
 
   return (
@@ -83,7 +120,13 @@ function Navbar() {
                 <span className="nav-icon"></span>
                 Editar Perfil
               </Link>
-              
+              <button 
+                className="nav-link"
+                onClick={openRoomSearchModal}
+              >
+                <span className="nav-icon"></span>
+                Pesquisar Quartos
+              </button>
               {/* Logout Button */}
               <button onClick={handleLogout} className="logout-button">
                 <span className="nav-icon"></span>
@@ -108,6 +151,13 @@ function Navbar() {
       {isMobileMenuOpen && (
         <div className="mobile-overlay" onClick={closeMobileMenu}></div>
       )}
+
+      {/* Room Search Modal */}
+      <RoomSearchModal
+        isOpen={isRoomSearchModalOpen}
+        onClose={closeRoomSearchModal}
+        onSearch={handleRoomSearch}
+      />
     </nav>
   );
 }
