@@ -176,23 +176,27 @@ button.nav-link {
 
 /* Buttons */
 .logout-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background: #e53e3e;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+  background: #e53e3e !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3) !important;
+  justify-content: center !important;
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 0.9rem !important;
+  padding: 0.75rem 1.25rem !important;
+  min-width: 80px !important;
 }
 
 .logout-button:hover {
+  background: #e53e3e !important;
+  color: white !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4) !important;
+}
+
+.logout-button::before {
+  background: #e53e3e !important;
 }
 
 .cta-button {

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import RegisterDropdown from './RegisterDropdown';
 import LoginDropdown from './LoginDropdown';
 import RoomSearchModal from './RoomSearchModal';
+import AddRoomModal from './AddRoomModal';
 import './Navbar.css';
 
 function Navbar() {
@@ -13,6 +14,7 @@ function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isRoomSearchModalOpen, setIsRoomSearchModalOpen] = useState(false);
+  const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
 
   // Detectar scroll para mudar o estilo da navbar
   useEffect(() => {
@@ -46,12 +48,29 @@ function Navbar() {
     setIsRoomSearchModalOpen(false);
   };
 
+  const openAddRoomModal = () => {
+    setIsAddRoomModalOpen(true);
+    closeMobileMenu();
+  };
+
+  const closeAddRoomModal = () => {
+    setIsAddRoomModalOpen(false);
+  };
+
   const handleRoomSearch = (searchData) => {
     // Função para loggar as informações da pesquisa
     logSearchData(searchData);
     
     // Navegar para a página de resultados com os dados
     navigate('/search-results', { state: { searchData } });
+  };
+
+  const handleAddRoom = (newRoom) => {
+    console.log('Novo quarto adicionado:', newRoom);
+    // Aqui você pode adicionar lógica adicional como:
+    // - Mostrar notificação de sucesso
+    // - Atualizar lista de quartos
+    // - Navegar para página de gerenciamento
   };
 
   // Função para loggar os dados da pesquisa
@@ -124,14 +143,13 @@ function Navbar() {
               </Link>
               <button 
                 className="nav-link"
-                onClick={openRoomSearchModal}
+                onClick={user.tipo === 'hospede' ? openRoomSearchModal : openAddRoomModal}
               >
                 <span className="nav-icon"></span>
-                {user.tipo === 'hospede' ? 'Pesquisar Quartos' : 'Ver Quartos'}
+                {user.tipo === 'hospede' ? 'Pesquisar Quartos' : 'Adicionar Quarto'}
               </button>
               {/* Logout Button */}
-              <button onClick={handleLogout} className="logout-button">
-                <span className="nav-icon"></span>
+              <button onClick={handleLogout} className="nav-link logout-button">
                 Sair
               </button>
             </>
@@ -160,6 +178,14 @@ function Navbar() {
         onClose={closeRoomSearchModal}
         onSearch={handleRoomSearch}
         userType={user?.tipo || 'hospede'}
+      />
+
+      {/* Add Room Modal */}
+      <AddRoomModal
+        isOpen={isAddRoomModalOpen}
+        onClose={closeAddRoomModal}
+        onAddRoom={handleAddRoom}
+        user={user}
       />
     </nav>
   );

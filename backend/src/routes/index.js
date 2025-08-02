@@ -1,6 +1,7 @@
 import express from 'express';
 import reservationRouter from './reservationRouter.js';
 import roomRouter from './roomRouter.js';
+import uploadRouter from './uploadRouter.js';
 import hospedeController from '../controllers/hospedeController.js';
 import hotelController from '../controllers/hotelController.js';
 import authRouter from './authRouter.js';
@@ -11,6 +12,7 @@ const router = express.Router();
 // router.use('/hotels', hotelRouter)
 router.use('/rooms', roomRouter);
 router.use('/reservations', reservationRouter);
+router.use('/upload', uploadRouter);
 router.use('/admin', adminRouter);
 // router.get('/users', userController.getAllUsers);
 
