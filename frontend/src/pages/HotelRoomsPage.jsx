@@ -94,19 +94,6 @@ function HotelRoomsPage() {
 
   return (
     <div className="hotel-rooms-page">
-      <div className="page-header">
-        <div className="header-content">
-          <button onClick={handleBackToHome} className="back-button">
-            ← Voltar
-          </button>
-          <h1>Meus Quartos</h1>
-          <div className="hotel-info">
-            <span className="hotel-name">{user.nome}</span>
-            <span className="hotel-type">Hotel</span>
-          </div>
-        </div>
-      </div>
-
       <div className="page-content">
         {loading && (
           <div className="loading-container">
