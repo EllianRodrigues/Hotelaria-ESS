@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RoomSearchModal.css';
 
-function RoomSearchModal({ isOpen, onClose, onSearch }) {
+function RoomSearchModal({ isOpen, onClose, onSearch, userType = 'hospede' }) {
   const [formData, setFormData] = useState({
     city: '',
     n_of_adults: 1,
@@ -46,7 +46,7 @@ function RoomSearchModal({ isOpen, onClose, onSearch }) {
     <div className="modal-overlay" onClick={handleClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Pesquisar Quartos</h2>
+          <h2>{userType === 'hospede' ? 'Pesquisar Quartos' : 'Ver Quartos'}</h2>
           <button className="modal-close" onClick={handleClose}>
             ×
           </button>
@@ -113,7 +113,7 @@ function RoomSearchModal({ isOpen, onClose, onSearch }) {
               Cancelar
             </button>
             <button type="submit" className="btn-primary">
-              Pesquisar
+              {userType === 'hospede' ? 'Pesquisar' : 'Ver Quartos'}
             </button>
           </div>
         </form>

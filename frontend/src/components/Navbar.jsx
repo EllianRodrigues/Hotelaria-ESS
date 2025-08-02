@@ -56,13 +56,15 @@ function Navbar() {
 
   // Função para loggar os dados da pesquisa
   const logSearchData = (data) => {
-    console.log('=== DADOS DA PESQUISA DE QUARTOS ===');
+    const action = user?.tipo === 'hospede' ? 'PESQUISA' : 'VISUALIZAÇÃO';
+    console.log(`=== DADOS DA ${action} DE QUARTOS ===`);
     console.log('Cidade:', data.city);
     console.log('Número de adultos:', data.n_of_adults);
     console.log('Data de início:', data.start_date);
     console.log('Data de fim:', data.end_date);
-    console.log('Data e hora da pesquisa:', new Date().toLocaleString('pt-BR'));
+    console.log('Data e hora da ação:', new Date().toLocaleString('pt-BR'));
     console.log('Usuário logado:', user ? `${user.nome} (${user.tipo})` : 'Não logado');
+    console.log('Tipo de ação:', user?.tipo === 'hospede' ? 'Pesquisa de quartos' : 'Visualização de quartos');
     console.log('=====================================');
     
     // Aqui você pode adicionar mais lógica como:
@@ -125,7 +127,7 @@ function Navbar() {
                 onClick={openRoomSearchModal}
               >
                 <span className="nav-icon"></span>
-                Pesquisar Quartos
+                {user.tipo === 'hospede' ? 'Pesquisar Quartos' : 'Ver Quartos'}
               </button>
               {/* Logout Button */}
               <button onClick={handleLogout} className="logout-button">
@@ -157,6 +159,7 @@ function Navbar() {
         isOpen={isRoomSearchModalOpen}
         onClose={closeRoomSearchModal}
         onSearch={handleRoomSearch}
+        userType={user?.tipo || 'hospede'}
       />
     </nav>
   );
