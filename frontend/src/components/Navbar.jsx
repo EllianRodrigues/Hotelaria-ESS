@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx'; 
 import RegisterDropdown from './RegisterDropdown';
 import LoginDropdown from './LoginDropdown';
+import RoomSearchModal from './RoomSearchModal';
+import AddRoomModal from './AddRoomModal';
 import './Navbar.css';
 
 function Navbar() {
@@ -11,6 +13,8 @@ function Navbar() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isRoomSearchModalOpen, setIsRoomSearchModalOpen] = useState(false);
+  const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
 
   // Detectar scroll para mudar o estilo da navbar
   useEffect(() => {
@@ -33,6 +37,65 @@ function Navbar() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const openRoomSearchModal = () => {
+    setIsRoomSearchModalOpen(true);
+    closeMobileMenu();
+  };
+
+  const closeRoomSearchModal = () => {
+    setIsRoomSearchModalOpen(false);
+  };
+
+  const openAddRoomModal = () => {
+    setIsAddRoomModalOpen(true);
+    closeMobileMenu();
+  };
+
+  const closeAddRoomModal = () => {
+    setIsAddRoomModalOpen(false);
+  };
+
+  const openViewHotelRoomsPage = () => {
+    navigate('/hotel-rooms');
+    closeMobileMenu();
+  };
+
+  const handleRoomSearch = (searchData) => {
+    // Função para loggar as informações da pesquisa
+    logSearchData(searchData);
+    
+    // Navegar para a página de resultados com os dados
+    navigate('/search-results', { state: { searchData } });
+  };
+
+  const handleAddRoom = (newRoom) => {
+    console.log('Novo quarto adicionado:', newRoom);
+    // Aqui você pode adicionar lógica adicional como:
+    // - Mostrar notificação de sucesso
+    // - Atualizar lista de quartos
+    // - Navegar para página de gerenciamento
+  };
+
+  // Função para loggar os dados da pesquisa
+  const logSearchData = (data) => {
+    const action = user?.tipo === 'hospede' ? 'PESQUISA' : 'VISUALIZAÇÃO';
+    console.log(`=== DADOS DA ${action} DE QUARTOS ===`);
+    console.log('Cidade:', data.city);
+    console.log('Número de adultos:', data.n_of_adults);
+    console.log('Data de início:', data.start_date);
+    console.log('Data de fim:', data.end_date);
+    console.log('Data e hora da ação:', new Date().toLocaleString('pt-BR'));
+    console.log('Usuário logado:', user ? `${user.nome} (${user.tipo})` : 'Não logado');
+    console.log('Tipo de ação:', user?.tipo === 'hospede' ? 'Pesquisa de quartos' : 'Visualização de quartos');
+    console.log('=====================================');
+    
+    // Aqui você pode adicionar mais lógica como:
+    // - Salvar no localStorage
+    // - Enviar para uma API
+    // - Salvar no histórico de pesquisas
+    // - Analytics/tracking
   };
 
   return (
@@ -83,10 +146,23 @@ function Navbar() {
                 <span className="nav-icon"></span>
                 Editar Perfil
               </Link>
-              
-              {/* Logout Button */}
-              <button onClick={handleLogout} className="logout-button">
+              <button 
+                className="nav-link"
+                onClick={user.tipo === 'hospede' ? openRoomSearchModal : openAddRoomModal}
+              >
                 <span className="nav-icon"></span>
+                {user.tipo === 'hospede' ? 'Pesquisar Quartos' : 'Adicionar Quarto'}
+              </button>
+              {user.tipo === 'hotel' && (
+                <button 
+                  className="nav-link"
+                  onClick={openViewHotelRoomsPage}
+                >
+                  Ver Quartos
+                </button>
+              )}
+              {/* Logout Button */}
+              <button onClick={handleLogout} className="nav-link logout-button">
                 Sair
               </button>
             </>
@@ -108,6 +184,23 @@ function Navbar() {
       {isMobileMenuOpen && (
         <div className="mobile-overlay" onClick={closeMobileMenu}></div>
       )}
+
+      {/* Room Search Modal */}
+      <RoomSearchModal
+        isOpen={isRoomSearchModalOpen}
+        onClose={closeRoomSearchModal}
+        onSearch={handleRoomSearch}
+        userType={user?.tipo || 'hospede'}
+      />
+
+      {/* Add Room Modal */}
+      <AddRoomModal
+        isOpen={isAddRoomModalOpen}
+        onClose={closeAddRoomModal}
+        onAddRoom={handleAddRoom}
+        user={user}
+      />
+
     </nav>
   );
 }
