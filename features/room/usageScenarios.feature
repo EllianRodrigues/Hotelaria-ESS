@@ -21,7 +21,6 @@ Scenario: Incomplete hotel room search
   And that I am on the initial page
   When I search for a room
   And I select the period from "2025-08-15" to "2025-08-25"
-  And I select the city "Rio de Janeiro"
   And I confirm my search
   Then I am still on the initial page
   And I receive an error message that states "Please fill out this field"
@@ -34,6 +33,7 @@ Scenario: Successful publishing of a hotel room
   And I fill in "Chalé" as the hotel type
   And I fill in "2" as the number of adults it can accommodate
   And I fill in "100.00" as the daily cost of booking
+  And I fill in "São Paulo" as the city
   And I fill in "30" as the identifier for the lodge
   And I fill in "Chalé com vista para o mar" as the description
   And I confirm

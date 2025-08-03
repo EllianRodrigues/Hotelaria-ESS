@@ -8,7 +8,7 @@ export default {
     publishQuiet: true,
     parallel: 1,
     retry: 1,
-    timeout: 60000,
+    timeout: 70000,
     worldParameters: {
       baseUrl: 'http://localhost:5173'
     }

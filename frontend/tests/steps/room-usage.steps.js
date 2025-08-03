@@ -84,7 +84,7 @@ Before(async function() {
 });
 
 After(async function() {
-  // Clean up per scenario
+  // Clean up per scenario - only close browser, don't do room cleanup here
   if (context) {
     await context.close();
   }
@@ -187,6 +187,10 @@ When('I fill in {string} as the daily cost of booking', async function(cost) {
   await page.fill('input[name="cost"]', cost);
 });
 
+When('I fill in {string} as the city', async function(city) {
+  await page.fill('input[name="city"]', city);
+});
+
 When('I fill in {string} as the identifier for the lodge', async function(identifier) {
   await page.fill('input[name="identifier"]', identifier);
 });
@@ -196,9 +200,17 @@ When('I fill in {string} as the description', async function(description) {
 });
 
 When('I confirm', async function() {
-  await page.click('button[type="submit"]');
+  await page.locator('button:has-text("ADICIONAR QUARTO")').last().highlight();
+  const button = page.locator('button:has-text("ADICIONAR QUARTO")').last();
+  await button.click();
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
+});
+
+When('I verify the form was submitted successfully', async function() {
+  // Check if modal is closed or if form was cleared (successful submission)
+  const modalVisible = await page.locator('.modal-content').isVisible();
+  expect(modalVisible).toBe(false);
 });
 
 // Verification steps
@@ -222,15 +234,15 @@ Then('I can see a list of available hotel rooms in {string} for the dates {strin
 
 Then('I receive an error message that states {string}', async function(errorMessage) {
   if (errorMessage === 'Please fill out this field') {
-    // Check for browser validation popup
-    const validationMessage = page.locator('text="Please fill out this field"');
-    const hasValidationMessage = await validationMessage.isVisible().catch(() => false);
+    // Method 1: Check if the form submission was prevented by validation
+    // The modal should still be visible if validation failed
+    const modalStillVisible = await page.locator('.modal-content').isVisible();
+    console.log('Modal still visible:', modalStillVisible);
+    expect(modalStillVisible).toBe(true);
     
-    if (hasValidationMessage) {
-      console.log('✅ Found browser validation popup with "Please fill out this field"');
-    } else {
-      console.log('✅ Browser validation prevented form submission');
-    }
+    // Method 2: Simple check - if modal is still visible, validation prevented submission
+    // This is sufficient because if validation failed, the modal should still be open
+    console.log('✅ Form validation prevented submission - modal is still visible');
   } else {
     await expect(page.locator('.error-message')).toContainText(errorMessage);
   }
@@ -239,15 +251,59 @@ Then('I receive an error message that states {string}', async function(errorMess
 Then('when I move to the {string} page I can see the hotel room with description {string} listed', async function(pageName, description) {
   await page.click('button:has-text("Ver Quartos")');
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
   
   // Look for the room description that was created
   const roomDescription = page.locator(`text="${description}"`);
-  await roomDescription.isVisible();
+  const isVisible = await roomDescription.isVisible();
+  expect(isVisible).toBe(true);
 });
 
 Then('the system adds the hotel room with room ID {string} to my hotel', async function(roomId) {
   // Verify the room was added to the hotel's room list
   const roomDescription = page.locator('text="Chalé com vista para o mar"');
   await roomDescription.isVisible();
+  
+  // Clean up the test room after verification
+  try {
+    console.log('🧹 Cleaning up test room...');
+    
+    // Look for the room we just created and delete it
+    const roomCard = page.locator('div.room-card').filter({ hasText: /Quarto/ }).first();
+    
+    if (await roomCard.isVisible()) {
+      console.log('Found room card, attempting to delete...');
+      await roomCard.highlight();
+      const deleteButton = roomCard.locator('button:has-text("Remover")').first();
+      
+      if (await deleteButton.isVisible()) {
+        console.log('Found delete button, clicking...');
+        await deleteButton.click();
+        await page.waitForLoadState('networkidle');
+        
+        // Wait for confirmation modal to appear with longer timeout
+        await page.waitForSelector('.modal-content');
+        
+        // Scroll to the bottom of the modal to ensure the delete button is visible
+        const modalContent = page.locator('.modal-content');
+        await modalContent.highlight();
+        await modalContent.evaluate((el) => {
+          el.scrollTop = el.scrollHeight;
+        });
+                
+        // Find and click the "Excluir Quarto" button
+        const confirmDeleteButton = page.locator('button:has-text("Excluir Quarto")').first();
+        await confirmDeleteButton.highlight();
+        await confirmDeleteButton.click();
+        await page.waitForLoadState('networkidle');
+        console.log('✅ Cleaned up test room successfully');
+      } else {
+        console.log('❌ Delete button not found');
+      }
+    } else {
+      console.log('❌ Room card not found - no cleanup needed');
+    }
+  } catch (error) {
+    console.log('⚠️ Cleanup encountered an error:', error.message);
+  }
 }); 

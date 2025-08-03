@@ -69,49 +69,7 @@ npm install
 npm start
 ```
 
-## 🎯 Uso da API
-
-### Endpoints Principais
-
-#### Sistema de Estatísticas
-```bash
-# Resumo Geral
-GET /api/estatisticas/resumo
-
-# Por Cidade
-GET /api/estatisticas/cidades
-
-# Reservas por Mês
-GET /api/estatisticas/meses
-
-# Top Hotéis
-GET /api/estatisticas/top
-
-# Por Tipo de Quarto
-GET /api/estatisticas/tipos-quarto
-
-# Por Estação
-GET /api/estatisticas/estacoes
-
-# Métricas Avançadas
-GET /api/estatisticas/metricas-avancadas
-
-# Tendências
-GET /api/estatisticas/tendencias
-
-# Todas as Estatísticas
-GET /api/estatisticas/tudo
-
-# Limpar Cache
-POST /api/estatisticas/limpar-cache
-```
-
-#### Health Check
-```bash
-GET /health
-```
-
-## 🧪 Testes
+## 🧪 Testes - backend
 
 ```bash
 # Executar todos os testes
@@ -123,6 +81,35 @@ npm run test:watch
 # Executar testes com coverage
 npm run test:coverage
 ```
+
+## 🧪 Testes - frontend
+
+```bash
+# Navegar para o diretório frontend
+cd frontend
+
+# Executar testes Cucumber (BDD)
+npm run test:cucumber
+
+# Executar testes Playwright
+npm run test:playwright
+
+# Executar testes em modo watch
+npm run test:watch
+
+# Executar testes com coverage
+npm run test:coverage
+```
+
+### 📋 Testes Cucumber (BDD)
+Os testes Cucumber estão localizados em:
+- **Features**: `features/room/usageScenarios.feature`
+- **Steps**: `tests/steps/room-usage.steps.js`
+
+### 🎭 Testes Playwright
+Os testes Playwright estão localizados em:
+- **Testes**: `tests/room-usage.spec.js`
+- **Configuração**: `playwright.config.js`
 
 ## 🔧 Scripts Disponíveis
 
@@ -136,36 +123,6 @@ npm run docs       # Gerar documentação
 npm run security   # Verificar vulnerabilidades
 ```
 
-## 📁 Estrutura do Projeto
-
-```
-projeto-ESS/
-├── frontend/                    # React + Vite
-├── backend/
-│   ├── config/
-│   │   └── config.js              # Configurações do sistema
-│   ├── controllers/
-│   │   ├── adminController.js      # Controle administrativo
-│   │   ├── authController.js       # Autenticação
-│   │   ├── hospedeController.js    # Gestão de hóspedes
-│   │   ├── hotelController.js      # Gestão de hotéis
-│   │   ├── reservationController.js # Reservas
-│   │   ├── roomController.js       # Gestão de quartos
-│   │   └── StatisticsController.js # Controladores da API de estatísticas
-│   ├── database/
-│   │   └── database.js            # Configuração do banco
-│   ├── models/
-│   │   └── StatisticsModel.js     # Modelo de dados
-│   ├── routes/
-│   │   └── statisticsRoutes.js    # Rotas da API
-│   ├── __tests__/
-│   │   └── statistics.test.js     # Testes automatizados
-│   └── server.js                  # Servidor principal
-├── package.json
-├── .eslintrc.js                   # Configuração ESLint
-├── .gitignore                     # Arquivos ignorados
-└── README.md                      # Documentação
-```
 
 ## 🔒 Segurança
 
@@ -182,39 +139,9 @@ projeto-ESS/
 - **Otimização**: Queries SQL otimizadas
 - **Graceful Shutdown**: Encerramento seguro
 
-## 📊 Banco de Dados
-
-### Tabelas
-- **hotels**: Informações dos hotéis
-- **rooms**: Quartos disponíveis
-- **hospedes**: Dados dos hóspedes
-- **reservations**: Histórico de reservas
-
-### Dados de Exemplo
-O sistema inclui dados de exemplo com:
-- 5 hotéis de luxo
-- 16 quartos variados
-- 8 hóspedes
-- 10 reservas históricas
-
-## 🚀 Deploy
-
-### Variáveis de Ambiente
+### Docker no backend (Opcional)
 ```bash
-PORT=3000                    # Porta do servidor
-NODE_ENV=production          # Ambiente
-DB_PATH=./database/hotel.db  # Caminho do banco
-CORS_ORIGIN=*               # Origem CORS
-LOG_LEVEL=info              # Nível de log
-```
-
-### Docker (Opcional)
-```bash
-# Construir imagem
-docker build -t hotelaria-api .
-
-# Executar container
-docker run -p 3000:3000 hotelaria-api
+docker-compose up
 ```
 
 ## 📈 Monitoramento

@@ -8,24 +8,20 @@ async function seedRooms() {
     console.log('🌱 Iniciando seed de rooms...');
 
     // Clear existing tables (only if they exist)
-    try {
-      await db.run('DELETE FROM rooms');
-      console.log('🗑️ Rooms table cleared');
-    } catch (error) {
-      console.log('⚠️ Rooms table does not exist yet');
-    }
-    
-    try {
-      await db.run('DELETE FROM hotels');
-      console.log('🗑️ Hotels table cleared');
-    } catch (error) {
-      console.log('⚠️ Hotels table does not exist yet');
-    }
 
-          const timestamp = Date.now();
-      const hotel1 = await Hotel.create('Hotel Copacabana Palace', `hotel1@seed${timestamp}.com`, '12345678901234', 'password123');
-      const hotel2 = await Hotel.create('Hotel Fasano', `hotel2@seed${timestamp}.com`, '98765432109876', 'password123');
-      const hotel3 = await Hotel.create('Hotel Unique', `hotel3@seed${timestamp}.com`, '11111111111111', 'password123');
+    await db.run('DELETE FROM rooms');
+    console.log('🗑️ Rooms table cleared');
+
+    await db.run('DELETE FROM reservations');
+    console.log('🗑️ Rooms table cleared');
+
+    await db.run('DELETE FROM hotels');
+    console.log('🗑️ Hotels table cleared');
+
+    const timestamp = Date.now();
+    const hotel1 = await Hotel.create('Hotel Copacabana Palace', `hotel1@seed${timestamp}.com`, '12345678901234', 'password123');
+    const hotel2 = await Hotel.create('Hotel Fasano', `hotel2@seed${timestamp}.com`, '98765432109876', 'password123');
+    const hotel3 = await Hotel.create('Hotel Unique', `hotel3@seed${timestamp}.com`, '11111111111111', 'password123');
     console.log('✅ Hotéis criados:', hotel1.id, hotel2.id, hotel3.id);
 
     // Since we deleted the database, we don't need to check for existing rooms
@@ -49,7 +45,7 @@ async function seedRooms() {
         n_of_adults: 3,
         description: 'Suite de luxo com vista para o mar',
         cost: 450,
-        photos: ['https://res.cloudinary.com/dajmzj1ww/image/upload/v1754170867/download_xwzx6n.jpg', 
+        photos: ['https://res.cloudinary.com/dajmzj1ww/image/upload/v1754170867/download_xwzx6n.jpg',
           'https://res.cloudinary.com/dajmzj1ww/image/upload/v1754170866/miramar-hotel-by-windsor_bilqrt.jpg'],
         city: 'Rio de Janeiro',
         hotel_id: hotel1.id

@@ -63,13 +63,53 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       await page.waitForTimeout(2000);
     });
 
+    test.afterEach(async ({ page }) => {
+      // Clean up: Delete the room created in the successful test
+      try {
+        // Navigate to Ver Quartos page to see the rooms
+        await page.goto('http://localhost:5173/hotel-rooms');
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(1000);
+
+        // Look for a div that contains "Quarto TEST001"
+        // also filter for the class room-card
+        const roomCard = page.locator('div.room-card').filter({ hasText: /^Quarto TEST001/ }).first();
+        const deleteButton = roomCard.locator('button:has-text("Remover")').first();
+        if (await deleteButton.isVisible()) {
+          await deleteButton.click();
+          await page.waitForLoadState('networkidle');
+          await page.waitForTimeout(1000);
+          
+          // Wait for confirmation modal to appear
+          await page.waitForSelector('.modal-content', { timeout: 5000 });
+          
+          // Scroll to the bottom of the modal to ensure the delete button is visible
+          const modalContent = page.locator('.modal-content');
+          await modalContent.highlight();
+          await modalContent.evaluate((el) => {
+            el.scrollTop = el.scrollHeight;
+          });
+          
+          // Find and click the "Excluir Quarto" button
+          const confirmDeleteButton = page.locator('button:has-text("Excluir Quarto")').first();
+          await confirmDeleteButton.highlight();
+          await confirmDeleteButton.click();
+          await page.waitForLoadState('networkidle');
+          await page.waitForTimeout(1000);
+          console.log('✅ Cleaned up test room TEST-001');
+        }
+      } catch (error) {
+        console.log('⚠️ Cleanup encountered an error:', error.message);
+      }
+    });
+
     test('Hotel can publish a new room successfully', async ({ page }) => {
       // Click add new room button in navbar
       await page.click('button:has-text("Adicionar Quarto")');
       await page.waitForLoadState('networkidle');
 
       // Fill room form with complete data
-      await page.fill('input[name="identifier"]', 'TEST-001');
+      await page.fill('input[name="identifier"]', 'TEST001');
       await page.selectOption('select[name="type"]', 'lodge');
       await page.selectOption('select[name="n_of_adults"]', '2');
       await page.fill('input[name="cost"]', '180.00');
@@ -77,7 +117,9 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       await page.fill('textarea[name="description"]', 'Chalé com vista para o mar');
 
       // Submit form
-      await page.click('button[type="submit"]');
+      await page.locator('button:has-text("ADICIONAR QUARTO")').last().highlight();
+      const button = page.locator('button:has-text("ADICIONAR QUARTO")').last();
+      await button.click();
       await page.waitForLoadState('networkidle');
 
       // Verify success - check if form was submitted successfully
@@ -85,17 +127,7 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       
       // Check if modal is closed or if form was cleared (successful submission)
       const modalVisible = await page.locator('.modal-content').isVisible();
-      if (!modalVisible) {
-        console.log('✅ Modal closed successfully');
-      } else {
-        // Check if form was cleared (indicates successful submission)
-        const identifierValue = await page.locator('input[name="identifier"]').inputValue();
-        if (identifierValue === '') {
-          console.log('✅ Form submitted successfully (form cleared)');
-        } else {
-          console.log('✅ Form submission completed');
-        }
-      }
+      expect(modalVisible).toBe(false);
 
       // Navigate to Ver Quartos page
       await page.click('button:has-text("Ver Quartos")');
@@ -104,7 +136,8 @@ test.describe('Comprehensive Hotel Room Flow', () => {
 
       // Look for the room that was created in the previous test
       const roomDescription = page.locator('text="Chalé com vista para o mar"');
-      await roomDescription.isVisible()
+      const isVisible = await roomDescription.isVisible()
+      expect(isVisible).toBe(true);
     });
 
     test('Hotel cannot publish room with missing required fields', async ({ page }) => {
@@ -119,7 +152,8 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       // Intentionally not filling identifier field
 
       // Submit form
-      await page.click('button[type="submit"]');
+      const button = page.locator('button:has-text("ADICIONAR QUARTO")').last();
+      await button.click();
       await page.waitForLoadState('networkidle');
 
       // Wait for validation to occur
@@ -128,32 +162,26 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       // Verify form is still visible (modal not closed due to validation)
       await expect(page.locator('.modal-content')).toBeVisible();
       
-      // Check if there's an error message or if form validation prevented submission
-      const errorVisible = await page.locator('.error-message').isVisible();
-      if (errorVisible) {
-        console.log('✅ Error message displayed correctly');
-      } else {
-        console.log('✅ Form validation prevented submission (no error message needed)');
-      }
+      // Method 1: Check if the form submission was prevented by validation
+      // The modal should still be visible if validation failed
+      const modalStillVisible = await page.locator('.modal-content').isVisible();
+      expect(modalStillVisible).toBe(true);
       
-      // Check for browser validation on required fields
+      // Method 2: Check if the required field has the :invalid pseudo-class
       const identifierField = page.locator('input[name="identifier"]');
-      await expect(identifierField).toHaveAttribute('required');
+      const isInvalid = await identifierField.evaluate((el) => {
+        return el.matches(':invalid');
+      });
+      expect(isInvalid).toBe(true);
       
-      // Check that the identifier field is still empty (browser validation prevented submission)
-      const identifierValue = await page.locator('input[name="identifier"]').inputValue();
-      expect(identifierValue).toBe('');
+      // Method 3: Check if the form has validation errors by looking for the :invalid state
+      const form = page.locator('form');
+      const formHasValidationErrors = await form.evaluate((el) => {
+        return el.checkValidity() === false;
+      });
+      expect(formHasValidationErrors).toBe(true);
       
-      // Look for browser validation popup with "Please fill out this field" text
-      // This could be in a tooltip, validation message, or browser popup
-      const validationMessage = page.locator('text="Please fill out this field"');
-      const hasValidationMessage = await validationMessage.isVisible().catch(() => false);
-      
-      if (hasValidationMessage) {
-        console.log('✅ Found browser validation popup with "Please fill out this field"');
-      } else {
-        console.log('✅ Browser validation prevented form submission (popup may not be visible in test)');
-      }
+      console.log('✅ Form validation prevented submission - required fields missing');
     });
   });
 
@@ -194,7 +222,6 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       // find the button with text "Pesquisar" EXATAMENTE
       const submitButton = page.locator('button:has-text("Pesquisar")').nth(1);
       const isVisible = await submitButton.isVisible();
-      console.log(`Submit button visible: ${isVisible}`);
       await submitButton.click();
       await page.waitForLoadState('networkidle');
 
@@ -203,7 +230,8 @@ test.describe('Comprehensive Hotel Room Flow', () => {
 
       // Look for a description like "Quarto confortável com vista para o mar" (it will have been added in the seed)
       const roomDescription = page.locator('text="Quarto confortável com vista para o mar"');
-      await roomDescription.isVisible()
+      const roomDescriptionVisible = await roomDescription.isVisible()
+      expect(roomDescriptionVisible).toBe(true);
 
       // Check if navigation occurred or if search was processed
       const currentUrl = page.url();
@@ -226,18 +254,23 @@ test.describe('Comprehensive Hotel Room Flow', () => {
       await page.click('button[type="submit"]');
       await page.waitForLoadState('networkidle');
 
-      // Verify modal is still open (form not submitted due to validation)
+      // Verify form is still visible (modal not closed due to validation)
       await expect(page.locator('.modal-content')).toBeVisible();
       
-      // Look for browser validation popup with "Please fill out this field" text
-      const validationMessage = page.locator('text="Please fill out this field"');
-      const hasValidationMessage = await validationMessage.isVisible().catch(() => false);
+      // Method 1: Check if the form submission was prevented by validation
+      // The modal should still be visible if validation failed
+      const modalStillVisible = await page.locator('.modal-content').isVisible();
+      expect(modalStillVisible).toBe(true);
       
-      if (hasValidationMessage) {
-        console.log('✅ Found browser validation popup with "Please fill out this field"');
-      } else {
-        console.log('✅ Browser validation prevented form submission (popup may not be visible in test)');
-      }
+      
+      // Method 2: Check if the form has validation errors by looking for the :invalid state
+      const form = page.locator('form');
+      const formHasValidationErrors = await form.evaluate((el) => {
+        return el.checkValidity() === false;
+      });
+      expect(formHasValidationErrors).toBe(true);
+      
+      console.log('✅ Form validation prevented submission - required fields missing');
       
       // Verify we're still on the same page
       await expect(page).toHaveURL(/.*localhost:5173/);
