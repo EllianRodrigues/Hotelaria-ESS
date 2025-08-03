@@ -200,7 +200,6 @@ When('I fill in {string} as the description', async function(description) {
 });
 
 When('I confirm', async function() {
-  await page.locator('button:has-text("ADICIONAR QUARTO")').last().highlight();
   const button = page.locator('button:has-text("ADICIONAR QUARTO")').last();
   await button.click();
   await page.waitForLoadState('networkidle');
@@ -273,7 +272,6 @@ Then('the system adds the hotel room with room ID {string} to my hotel', async f
     
     if (await roomCard.isVisible()) {
       console.log('Found room card, attempting to delete...');
-      await roomCard.highlight();
       const deleteButton = roomCard.locator('button:has-text("Remover")').first();
       
       if (await deleteButton.isVisible()) {
@@ -286,14 +284,12 @@ Then('the system adds the hotel room with room ID {string} to my hotel', async f
         
         // Scroll to the bottom of the modal to ensure the delete button is visible
         const modalContent = page.locator('.modal-content');
-        await modalContent.highlight();
         await modalContent.evaluate((el) => {
           el.scrollTop = el.scrollHeight;
         });
                 
         // Find and click the "Excluir Quarto" button
         const confirmDeleteButton = page.locator('button:has-text("Excluir Quarto")').first();
-        await confirmDeleteButton.highlight();
         await confirmDeleteButton.click();
         await page.waitForLoadState('networkidle');
         console.log('✅ Cleaned up test room successfully');
