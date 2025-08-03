@@ -1,39 +1,36 @@
-import { Given, When, Then, Before, After } from '@cucumber/cucumber';
+import { Given, When, Then, Before, After, BeforeAll, AfterAll } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { chromium } from '@playwright/test';
 
 let page;
 let browser;
 let context;
+let globalBrowser;
+let globalContext;
 
-// Setup and teardown
-Before(async function() {
-  // Initialize browser context
-  browser = await chromium.launch({ headless: false });
-  context = await browser.newContext();
-  page = await context.newPage();
-  this.page = page;
+// Global setup - runs once for all scenarios
+BeforeAll(async function() {
+  console.log('🚀 Setting up test data for all scenarios...');
   
-  // Set base URL
-  await page.goto('http://localhost:5173');
-  
-  // Create test data - optimized version
-  console.log('🚀 Setting up test data...');
+  // Initialize browser context for setup
+  globalBrowser = await chromium.launch({ headless: false });
+  globalContext = await globalBrowser.newContext();
+  const setupPage = await globalContext.newPage();
   
   try {
     // 1a. Create hospede with CPF 335.447.380-07 and password 1234
     console.log('Creating hospede...');
-    await page.goto('http://localhost:5173/registro-hospede');
-    await page.waitForTimeout(1000);
-    await page.fill('input[name="nome"]', 'Teste Hospede');
-    await page.fill('input[name="email"]', 'teste.hospede@test.com');
-    await page.fill('input[name="cpf"]', '335.447.380-07');
-    await page.fill('input[name="senha"]', '1234');
-    await page.click('button[type="submit"]');
-    await page.waitForLoadState('networkidle');
+    await setupPage.goto('http://localhost:5173/registro-hospede');
+    await setupPage.waitForTimeout(1000);
+    await setupPage.fill('input[name="nome"]', 'Teste Hospede');
+    await setupPage.fill('input[name="email"]', 'teste.hospede@test.com');
+    await setupPage.fill('input[name="cpf"]', '335.447.380-07');
+    await setupPage.fill('input[name="senha"]', '1234');
+    await setupPage.click('button[type="submit"]');
+    await setupPage.waitForLoadState('networkidle');
     
     // Check if hospede creation was successful or if user already exists
-    const hospedeError = page.locator('.error-message');
+    const hospedeError = setupPage.locator('.error-message');
     if (await hospedeError.isVisible()) {
       console.log('Hospede already exists, continuing...');
     } else {
@@ -42,17 +39,17 @@ Before(async function() {
     
     // 1b. Create hotel with CNPJ 63.032.085/0001-00 and password 1234
     console.log('Creating hotel...');
-    await page.goto('http://localhost:5173/registro-hotel');
-    await page.waitForTimeout(1000);
-    await page.fill('input[name="nome"]', 'Hotel Teste');
-    await page.fill('input[name="email"]', 'hotel.teste@test.com');
-    await page.fill('input[name="cnpj"]', '63.032.085/0001-00');
-    await page.fill('input[name="senha"]', '1234');
-    await page.click('button[type="submit"]');
-    await page.waitForLoadState('networkidle');
+    await setupPage.goto('http://localhost:5173/registro-hotel');
+    await setupPage.waitForTimeout(1000);
+    await setupPage.fill('input[name="nome"]', 'Hotel Teste');
+    await setupPage.fill('input[name="email"]', 'hotel.teste@test.com');
+    await setupPage.fill('input[name="cnpj"]', '63.032.085/0001-00');
+    await setupPage.fill('input[name="senha"]', '1234');
+    await setupPage.click('button[type="submit"]');
+    await setupPage.waitForLoadState('networkidle');
     
     // Check if hotel creation was successful or if user already exists
-    const hotelError = page.locator('.error-message');
+    const hotelError = setupPage.locator('.error-message');
     if (await hotelError.isVisible()) {
       console.log('Hotel already exists, continuing...');
     } else {
@@ -62,11 +59,32 @@ Before(async function() {
     console.log('✅ Test data setup complete!');
   } catch (error) {
     console.log('⚠️ Setup encountered an error, but continuing with tests:', error.message);
+  } finally {
+    // Clean up setup browser
+    await setupPage.close();
+    await globalContext.close();
+    await globalBrowser.close();
   }
 });
 
+AfterAll(async function() {
+  console.log('🧹 Global cleanup complete');
+});
+
+// Per-scenario setup - runs for each scenario
+Before(async function() {
+  // Initialize browser context for this scenario
+  browser = await chromium.launch({ headless: false });
+  context = await browser.newContext();
+  page = await context.newPage();
+  this.page = page;
+  
+  // Set base URL
+  await page.goto('http://localhost:5173');
+});
+
 After(async function() {
-  // Clean up
+  // Clean up per scenario
   if (context) {
     await context.close();
   }
