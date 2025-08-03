@@ -7,31 +7,28 @@ async function seedRooms() {
   try {
     console.log('🌱 Iniciando seed de rooms...');
 
-    // Verificar se já existem hotéis de teste
-    const existingHotels = await Hotel.getAll();
-    let hotel1, hotel2, hotel3;
-
-    if (existingHotels.length === 0) {
-      // Criar hotéis de teste com emails únicos
-      hotel1 = await Hotel.create('Hotel Copacabana Palace', 'Rio de Janeiro', '12345678901234', 'hotel1@seed.com', 'password123');
-      hotel2 = await Hotel.create('Hotel Fasano', 'São Paulo', '98765432109876', 'hotel2@seed.com', 'password123');
-      hotel3 = await Hotel.create('Hotel Unique', 'São Paulo', '11111111111111', 'hotel3@seed.com', 'password123');
-      console.log('✅ Hotéis criados:', hotel1.id, hotel2.id, hotel3.id);
-    } else {
-      // Usar hotéis existentes
-      hotel1 = existingHotels[0];
-      hotel2 = existingHotels[1] || hotel1;
-      hotel3 = existingHotels[2] || hotel1;
-      console.log('✅ Usando hotéis existentes:', hotel1.id, hotel2.id, hotel3.id);
+    // Clear existing tables (only if they exist)
+    try {
+      await db.run('DELETE FROM rooms');
+      console.log('🗑️ Rooms table cleared');
+    } catch (error) {
+      console.log('⚠️ Rooms table does not exist yet');
+    }
+    
+    try {
+      await db.run('DELETE FROM hotels');
+      console.log('🗑️ Hotels table cleared');
+    } catch (error) {
+      console.log('⚠️ Hotels table does not exist yet');
     }
 
-    // Verificar se já existem rooms
-    const existingRooms = await Room.getAll();
-    if (existingRooms.length > 0) {
-      console.log('⚠️ Rooms já existem no banco. Pulando criação...');
-      console.log('🎉 Seed de rooms concluído!');
-      process.exit(0);
-    }
+          const timestamp = Date.now();
+      const hotel1 = await Hotel.create('Hotel Copacabana Palace', `hotel1@seed${timestamp}.com`, '12345678901234', 'password123');
+      const hotel2 = await Hotel.create('Hotel Fasano', `hotel2@seed${timestamp}.com`, '98765432109876', 'password123');
+      const hotel3 = await Hotel.create('Hotel Unique', `hotel3@seed${timestamp}.com`, '11111111111111', 'password123');
+    console.log('✅ Hotéis criados:', hotel1.id, hotel2.id, hotel3.id);
+
+    // Since we deleted the database, we don't need to check for existing rooms
 
     // Criar rooms de teste
     const rooms = [

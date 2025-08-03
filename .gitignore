@@ -113,4 +113,9 @@ Thumbs.db
 
 # Backup files
 *.bak
-*.backup 
+*.backup
+
+# Playwright test reports and artifacts
+playwright-report/
+test-results/
+playwright/.cache/ 
