@@ -2,6 +2,7 @@
 import db from '../src/sqlite/db.js';
 import Hotel from '../src/models/hotel.js';
 import Room from '../src/models/room.js';
+import Admin from '../src/models/admin.js';
 
 async function seedRooms() {
   try {
@@ -9,20 +10,24 @@ async function seedRooms() {
 
     // Clear existing tables (only if they exist)
 
-    await db.run('DELETE FROM rooms');
-    console.log('🗑️ Rooms table cleared');
-
-    await db.run('DELETE FROM reservations');
-    console.log('🗑️ Rooms table cleared');
-
-    await db.run('DELETE FROM hotels');
-    console.log('🗑️ Hotels table cleared');
+     await new Promise((res, rej) => db.run('DELETE FROM reservations', (err) => err ? rej(err) : res()));
+    console.log('🗑️ Tabela de reservas limpa');
+    await new Promise((res, rej) => db.run('DELETE FROM rooms', (err) => err ? rej(err) : res()));
+    console.log('🗑️ Tabela de quartos limpa');
+    await new Promise((res, rej) => db.run('DELETE FROM hotels', (err) => err ? rej(err) : res()));
+    console.log('🗑️ Tabela de hotéis limpa');
+    await new Promise((res, rej) => db.run('DELETE FROM admins', (err) => err ? rej(err) : res())); // Limpa a tabela de admins
+    console.log('🗑️ Tabela de admins limpa');
 
     const timestamp = Date.now();
     const hotel1 = await Hotel.create('Hotel Copacabana Palace', `hotel1@seed${timestamp}.com`, '12345678901234', 'password123');
     const hotel2 = await Hotel.create('Hotel Fasano', `hotel2@seed${timestamp}.com`, '98765432109876', 'password123');
     const hotel3 = await Hotel.create('Hotel Unique', `hotel3@seed${timestamp}.com`, '11111111111111', 'password123');
     console.log('✅ Hotéis criados:', hotel1.id, hotel2.id, hotel3.id);
+
+    console.log('👤 Criando usuário admin...');
+    await Admin.create('Admin User', 'admin@test.com', 'admin123');
+    console.log('✅ Usuário admin criado com sucesso (email: admin@test.com, senha: admin123)');
 
     // Since we deleted the database, we don't need to check for existing rooms
 
