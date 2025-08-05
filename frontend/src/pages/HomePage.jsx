@@ -1,80 +1,91 @@
 // src/pages/HomePage.jsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import ImageSlider from '../components/ImageSlider';
+import './HomePage.css';
 
 function HomePage() {
-  const [hospedes, setHospedes] = useState([]);
-  const [hotels, setHotels] = useState([]);
-
-  const backendBaseUrl = 'http://localhost:3000/api';
-
-  const fetchHospedes = async () => {
-    try {
-      const response = await fetch(`${backendBaseUrl}/hospedes`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setHospedes(data);
-    } catch (error) {
-      console.error('Erro ao buscar hóspedes:', error);
-    }
-  };
-
-  const fetchHotels = async () => {
-    try {
-      const response = await fetch(`${backendBaseUrl}/hotels`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setHotels(data);
-    } catch (error) {
-      console.error('Erro ao buscar hotéis:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHospedes();
-    fetchHotels();
-  }, []);
+  // Dados dos slides com imagens e textos para hotelaria
+  const slides = [
+    {
+      id: 1,
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      title: 'Bem-vindo ao Paraíso',
+      subtitle: 'Descubra o conforto e luxo que você merece',
+      description: 'Hospedagem de qualidade com vistas deslumbrantes e serviço impecável'
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2068&q=80',
+      title: 'Quartos Elegantes',
+      subtitle: 'Conforto e sofisticação em cada detalhe',
+      description: 'Quartos espaçosos com decoração moderna e todas as comodidades'
+    },
+    {
+      id: 3,
+      image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      title: 'Piscina Infinita',
+      subtitle: 'Relaxe com vista para o horizonte',
+      description: 'Piscina com borda infinita e área de lazer exclusiva'
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      title: 'Gastronomia Exclusiva',
+      subtitle: 'Sabores únicos em ambiente sofisticado',
+      description: 'Restaurante premiado com pratos da culinária internacional'
+    },
+  ];
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Use a NavBar para fazer login/registrar/editar hospede e hotel</h2>
+    <div className="homepage">
+      {/* Slider Principal */}
+      <ImageSlider slides={slides} autoPlayInterval={5000} />
 
-      {/* Exibição da Lista de Hóspedes */}
-      <hr />
-      <h3>Hóspedes Cadastrados</h3>
-      {hospedes.length === 0 ? (
-        <p>Nenhum hóspede cadastrado ainda.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0, maxWidth: '600px', margin: '20px auto', textAlign: 'left' }}>
-          {hospedes.map((hospede) => (
-            <li key={hospede.id} style={{ backgroundColor: 'black', border: '1px solidrgb(0, 0, 0)', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>
-                ID: {hospede.id} | Nome: {hospede.nome} | Email: {hospede.email} | CPF: {hospede.cpf}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* Seção de Destaques */}
+      <div className="highlights">
+        <div className="highlight-card">
+          <div className="highlight-icon">🏨</div>
+          <h3>Hotéis Premium</h3>
+          <p>Seleção dos melhores hotéis com classificação 4+ estrelas</p>
+        </div>
+        <div className="highlight-card">
+          <div className="highlight-icon">💰</div>
+          <h3>Melhor Preço</h3>
+          <p>Garantimos os melhores preços do mercado</p>
+        </div>
+        <div className="highlight-card">
+          <div className="highlight-icon">🛡️</div>
+          <h3>Reserva Segura</h3>
+          <p>Reservas 100% seguras com cancelamento gratuito</p>
+        </div>
+        <div className="highlight-card">
+          <div className="highlight-icon">📞</div>
+          <h3>Suporte 24h</h3>
+          <p>Atendimento disponível 24 horas por dia</p>
+        </div>
+      </div>
 
-      {/* Exibição da Lista de Hotéis */}
-      <hr />
-      <h3>Hotéis Cadastrados</h3>
-      {hotels.length === 0 ? (
-        <p>Nenhum hotel cadastrado ainda.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0, maxWidth: '600px', margin: '20px auto', textAlign: 'left' }}>
-          {hotels.map((hotel) => (
-            <li key={hotel.id} style={{ backgroundColor: 'black', border: '1px solidrgb(0, 0, 0)', padding: '10px', marginBottom: '5px', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>
-                ID: {hotel.id} | Nome: {hotel.nome} | Email: {hotel.email} | CNPJ: {hotel.cnpj}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* Seção de Estatísticas */}
+      <div className="stats-section">
+        <div className="stats-container">
+          <div className="stat-item">
+            <div className="stat-number">500+</div>
+            <div className="stat-label">Hotéis Parceiros</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">50k+</div>
+            <div className="stat-label">Clientes Satisfeitos</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">100+</div>
+            <div className="stat-label">Destinos</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">24/7</div>
+            <div className="stat-label">Suporte</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

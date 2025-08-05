@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Room = {
   getAll: (filters = {}) => {
@@ -22,6 +22,10 @@ const Room = {
       if (filters.hotel_id) {
         conditions.push('hotel_id = ?');
         values.push(filters.hotel_id);
+      }
+      if (filters.city) {
+        conditions.push('city = ?');
+        values.push(filters.city);
       }
   
       if (conditions.length > 0) {
@@ -76,24 +80,16 @@ const Room = {
   */
   findAvailableRooms: (startDate, endDate, city, nOfAdults) => {
     const sql = `
-    SELECT
-      rooms.*,
-      hotels.city,
-      reservations.id AS reservation_id,
-      reservations.start_date,
-      reservations.end_date
-    FROM rooms
-    JOIN reservations ON rooms.id = reservations.room_id
-    JOIN hotels ON rooms.hotel_id = hotels.id
-    WHERE
-      hotels.city = ?
-      AND rooms.n_of_adults >= ?
-      AND NOT (
-        (? <= reservations.start_date AND ? >= reservations.end_date)
-        OR (? <= reservations.end_date AND ? > reservations.start_date)
-        OR (? < reservations.end_date AND ? >= reservations.start_date)
-        )
-    ORDER BY rooms.id, reservations.start_date;
+    SELECT r.*, res.id AS reservation_id FROM 'rooms' r
+JOIN hotels on hotels.id = r.hotel_id
+LEFT JOIN reservations res ON r.id = res.room_id
+WHERE r.city = ?
+AND r.n_of_adults >= ?
+AND (res.id IS null OR NOT (
+        (? <= res.start_date AND ? >= res.end_date)
+        OR (? <= res.end_date AND ? > res.start_date)
+        OR (? < res.end_date AND ? >= res.start_date)
+        ))
     `;
         
         const params = [
@@ -140,30 +136,16 @@ const Room = {
   },
 
   create: (room) => {
-    const { identifier, type, n_of_adults, description, cost, photos, hotel_id } = room;
+    const { identifier, type, n_of_adults, description, cost, photos, city, hotel_id } = room;
 
     return new Promise((resolve, reject) => {
-      // Check for duplicate
-      db.get(
-        `SELECT id FROM rooms WHERE identifier = ? AND type = ? AND hotel_id = ?`,
-        [identifier, type, hotel_id],
-        (err, existingRoom) => {
+      db.run(
+        `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, city, hotel_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), city, hotel_id],
+        function (err) {
           if (err) return reject(err);
-
-          if (existingRoom) {
-            return reject(new Error('Room with same identifier, type, and hotel_id already exists'));
-          }
-
-          // Insert new room
-          db.run(
-            `INSERT INTO rooms (identifier, type, n_of_adults, description, cost, photos, hotel_id)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [identifier, type, n_of_adults, description, cost, JSON.stringify(photos), hotel_id],
-            function (err) {
-              if (err) return reject(err);
-              resolve({ id: this.lastID, ...room });
-            }
-          );
+          resolve({ id: this.lastID, ...room });
         }
       );
     });
@@ -198,4 +180,4 @@ const Room = {
   }
 };
 
-module.exports = Room;
+export default Room;

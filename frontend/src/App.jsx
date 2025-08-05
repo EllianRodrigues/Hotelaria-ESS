@@ -12,6 +12,8 @@ import ProfilePage from './pages/ProfilePage';
 import EditHospede from './pages/EditHospede';
 import EditHotel from './pages/EditHotel';
 import ChangePassword from './pages/ChangePassword'; 
+import SearchResults from './pages/SearchResults';
+import HotelRoomsPage from './pages/HotelRoomsPage';
 import './App.css';
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
             <Route path="/editar-hospede/:id" element={<EditHospede />} />
             <Route path="/editar-hotel/:id" element={<EditHotel />} />
             <Route path="/alterar-senha" element={<ChangePassword />} />
+            <Route path="/search-results" element={<SearchResults />} />
+            <Route path="/hotel-rooms" element={<HotelRoomsPage />} />
           </Routes>
         </div>
       </AuthProvider>
