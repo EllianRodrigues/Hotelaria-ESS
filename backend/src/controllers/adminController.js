@@ -6,7 +6,7 @@ import Reservation from '../models/reservation.js';
 import Admin from '../models/admin.js';
 
 // Função de login para Admin (pode ser movida para authController se preferir)
-async function loginAdmin(req, res) {
+export async function loginAdmin(req, res) {
   try {
     const { email, senha } = req.body;
     if (!email || !senha) {

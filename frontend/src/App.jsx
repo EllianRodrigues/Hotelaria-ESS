@@ -8,12 +8,15 @@ import RegisterHospede from './pages/RegisterHospede';
 import RegisterHotel from './pages/RegisterHotel';
 import LoginHospede from './pages/LoginHospede';
 import LoginHotel from './pages/LoginHotel';
+import LoginAdmin from './pages/LoginAdmin';
 import ProfilePage from './pages/ProfilePage';
 import EditHospede from './pages/EditHospede';
 import EditHotel from './pages/EditHotel';
 import ChangePassword from './pages/ChangePassword'; 
 import SearchResults from './pages/SearchResults';
 import HotelRoomsPage from './pages/HotelRoomsPage';
+import Dashboard from './pages/Dashboard';
+import HotelDashboard from './pages/HotelDashboard';
 import './App.css';
 
 function App() {
@@ -28,12 +31,15 @@ function App() {
             <Route path="/registro-hotel" element={<RegisterHotel />} />
             <Route path="/login-hospede" element={<LoginHospede />} />
             <Route path="/login-hotel" element={<LoginHotel />} />
+            <Route path="/login-admin" element={<LoginAdmin />} />
             <Route path="/perfil" element={<ProfilePage />} />
             <Route path="/editar-hospede/:id" element={<EditHospede />} />
             <Route path="/editar-hotel/:id" element={<EditHotel />} />
             <Route path="/alterar-senha" element={<ChangePassword />} />
             <Route path="/search-results" element={<SearchResults />} />
             <Route path="/hotel-rooms" element={<HotelRoomsPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/hotel-dashboard" element={<HotelDashboard />} />
           </Routes>
         </div>
       </AuthProvider>

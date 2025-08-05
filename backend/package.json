@@ -2,7 +2,7 @@
   "name": "express-sqlite-mvc-api",
   "version": "1.0.0",
   "description": "A Node.js API using Express, SQLite, and MVC architecture.",
-  "main": "server.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
     "start": "node src/server.js",

@@ -115,7 +115,28 @@ Thumbs.db
 *.bak
 *.backup
 
+# Arquivos temporários de desenvolvimento (não commitar)
+test_*.js
+check_*.js
+start_*.js
+start_*.bat
+start_*.ps1
+*_temp.js
+*_debug.js
+*_new.js
+COMO_EXECUTAR.md
+TUTORIAL_*.md
+open_dashboard.bat
+quick_test.js
+add_sample_*.js
+
 # Playwright test reports and artifacts
 playwright-report/
 test-results/
-playwright/.cache/ 
+playwright/.cache/
+
+# Python virtual environments (se criados acidentalmente)
+.venv/
+venv/
+env/
+.env/
