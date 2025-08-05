@@ -78,7 +78,9 @@ db.serialize(() => {
     start_date TEXT NOT NULL,
     end_date TEXT NOT NULL,
     room_id INTEGER NOT NULL,
-    FOREIGN KEY (room_id) REFERENCES rooms(id)
+    hospede_id INTEGER NOT NULL,
+    FOREIGN KEY (room_id) REFERENCES rooms(id),
+    FOREIGN KEY (hospede_id) REFERENCES hospede(id)
   )`);
 });
 

@@ -93,7 +93,21 @@ export async function createRoom(req, res) {
  */
 export async function updateRoom(req, res) {
   try {
-    const changes = await Room.update(req.params.id, req.body);
+    const [type, identifier] = (req.params.id).split("-")
+    const hotel_id = req?.query?.hotel_id
+
+    // Primeiro, buscar o quarto para obter o ID real
+    const room = await Room.getByUniqueColumns(type, identifier, hotel_id);
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Verificar se o hotel tem permissão para editar este quarto
+    if (room.hotel_id != hotel_id) {
+      return res.status(403).json({ error: 'Unauthorized to edit this room' });
+    }
+
+    const changes = await Room.update(room.id, req.body);
 
     if (changes === 0) {
       return res.status(422).json({ error: 'No changes to be made' });
@@ -116,7 +130,21 @@ export async function updateRoom(req, res) {
  */
 export async function deleteRoom(req, res) {
   try {
-    const result = await Room.delete(req.params.id);
+    const [type, identifier] = (req.params.id).split("-")
+    const hotel_id = req?.query?.hotel_id
+
+    // Primeiro, buscar o quarto para obter o ID real
+    const room = await Room.getByUniqueColumns(type, identifier, hotel_id);
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Verificar se o hotel tem permissão para deletar este quarto
+    if (room.hotel_id != hotel_id) {
+      return res.status(403).json({ error: 'Unauthorized to delete this room' });
+    }
+
+    const result = await Room.delete(room.id);
     if (!result.deleted) return res.status(404).json({ error: 'Room not found' });
 
     res.json({ message: 'Room deleted successfully' });

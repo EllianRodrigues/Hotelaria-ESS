@@ -9,9 +9,26 @@ import path from 'path';
 use(chaiHttp);
 const server = typeof app === 'function' && app.listen ? app : { close: () => { } };
 
+//PARA LINUX
+// function extractFeatureData() {
+//   const featurePath = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'features', 'room', 'serviceScenarios.feature');
+//   const featureContent = fs.readFileSync(featurePath, 'utf8');
+
+
+//PARA WINDOWS
 function extractFeatureData() {
-  const featurePath = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'features', 'room', 'serviceScenarios.feature');
-  const featureContent = fs.readFileSync(featurePath, 'utf8');
+  let dirPath = path.dirname(new URL(import.meta.url).pathname);
+  // Corrigir para Windows: remover barra inicial se existir
+  if (process.platform === 'win32' && dirPath.startsWith('/')) {
+    dirPath = dirPath.slice(1);
+  }
+  const featurePath = path.resolve(
+    dirPath,
+    '..', '..', 'features', 'room', 'serviceScenarios.feature'
+  );
+  const normalizedPath = process.platform === 'win32' ? path.win32.normalize(featurePath) : featurePath;
+  const featureContent = fs.readFileSync(normalizedPath, 'utf8');
+//
   
   const data = {};
   
