@@ -1,56 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+import ReservationModal from '../components/ReservationModal';
 import './SearchResults.css';
 
 function SearchResults() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const searchData = location.state?.searchData;
+
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Função para buscar quartos no backend
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
   const fetchRooms = async (searchParams) => {
     try {
       setLoading(true);
       setError(null);
-      
       const queryParams = new URLSearchParams({
         available: 'true',
         city: searchParams.city,
         n_of_adults: searchParams.n_of_adults,
         start_date: searchParams.start_date,
-        end_date: searchParams.end_date
+        end_date: searchParams.end_date,
       });
-
       const response = await fetch(`http://localhost:3000/api/rooms?${queryParams}`);
-      
       if (!response.ok) {
         throw new Error(`Erro na busca: ${response.status}`);
       }
-
       const data = await response.json();
-      console.log('Quartos encontrados:', data);
       setRooms(data);
     } catch (err) {
-      console.error('Erro ao buscar quartos:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Log dos dados recebidos na página de resultados
   useEffect(() => {
     if (searchData) {
-      console.log('SearchResults: Dados recebidos na página:', searchData);
-      console.log('SearchResults: URL atual:', window.location.href);
       fetchRooms(searchData);
     } else {
-      console.log('SearchResults: Nenhum dado de pesquisa encontrado');
       setLoading(false);
     }
   }, [searchData]);
+
+  const handleReserveClick = (room) => {
+    if (!user || user.tipo !== 'hospede') {
+      navigate('/login-hospede', { state: { from: location } });
+      return;
+    }
+    setSelectedRoom(room);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedRoom(null);
+  };
+
+  const handleReservationSuccess = () => {
+    handleCloseModal();
+    setShowSuccessToast(true);
+    fetchRooms(searchData);
+
+    setTimeout(() => {
+      setShowSuccessToast(false);
+    }, 5000); // O toast some após 5 segundos
+  };
 
   if (!searchData) {
     return (
@@ -66,6 +88,18 @@ function SearchResults() {
 
   return (
     <div className="search-results-container">
+      {/* Estrutura do Toast de Sucesso */}
+      {showSuccessToast && (
+        <div className="success-toast">
+          <div className="toast-icon">✓</div>
+          <div className="toast-content">
+            <h4>Reserva Confirmada!</h4>
+            <p>Sua reserva foi efetuada com sucesso.</p>
+          </div>
+          <div className="toast-progress"></div>
+        </div>
+      )}
+
       <div className="search-header">
         <h1>Resultados da Pesquisa</h1>
         <div className="search-summary">
@@ -100,25 +134,16 @@ function SearchResults() {
             <h3 className="rooms-title">Quartos Encontrados ({rooms.length})</h3>
             <div className="rooms-list">
               {rooms.map((room, index) => (
-                <div key={`room-${room.identifier}-${index}`} className="room-card">
+                <div key={`room-${room.id}-${index}`} className="room-card">
                   <div className="room-header">
                     <h4>Quarto {room.identifier} - {room.type === 'hotelRoom' ? 'Quarto de Hotel' : 'Chalé'}</h4>
                     <span className="room-price">R$ {room.cost}/noite</span>
                   </div>
                   <div className="room-details">
-                    <p>
-                      <strong>Cidade:</strong> 
-                      <span>{room.city}</span>
-                    </p>
-                    <p>
-                      <strong>Capacidade:</strong> 
-                      <span>{room.n_of_adults} {room.n_of_adults === 1 ? 'adulto' : 'adultos'}</span>
-                    </p>
+                    <p><strong>Cidade:</strong> <span>{room.city}</span></p>
+                    <p><strong>Capacidade:</strong> <span>{room.n_of_adults} {room.n_of_adults === 1 ? 'adulto' : 'adultos'}</span></p>
                     {room.description && (
-                      <p>
-                        <strong>Descrição:</strong> 
-                        <span>{room.description}</span>
-                      </p>
+                      <p><strong>Descrição:</strong> <span>{room.description}</span></p>
                     )}
                   </div>
                   {room.photos && room.photos.length > 0 && (
@@ -136,14 +161,30 @@ function SearchResults() {
                       </div>
                     </div>
                   )}
+                  <div className="room-actions">
+                    <button 
+                      onClick={() => handleReserveClick(room)}
+                      className="btn-reservar"
+                    >
+                      Reservar Agora
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
+
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        room={selectedRoom}
+        searchData={searchData}
+        onReservationSuccess={handleReservationSuccess}
+      />
     </div>
   );
 }
 
-export default SearchResults; 
+export default SearchResults;

@@ -1,4 +1,5 @@
 // src/components/LoginDropdown.jsx
+// src/components/LoginDropdown.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginDropdown.css';
@@ -23,13 +24,21 @@ function LoginDropdown({ onClose }) {
       {isOpen && (
         <div className="dropdown-content">
           <Link to="/login-hospede" onClick={closeDropdown} className="dropdown-link">
-            <span className="link-icon"></span>
+            <span className="link-icon">👤</span>
             Hóspede
           </Link>
           <Link to="/login-hotel" onClick={closeDropdown} className="dropdown-link">
-            <span className="link-icon"></span>
+            <span className="link-icon">🏨</span>
             Hotel
           </Link>
+          
+          {/* Adição da seção de Admin */}
+          <div className="dropdown-divider"></div>
+          <Link to="/login-admin" onClick={closeDropdown} className="dropdown-link admin-link">
+            <span className="link-icon">👑</span>
+            Admin
+          </Link>
+
         </div>
       )}
     </div>

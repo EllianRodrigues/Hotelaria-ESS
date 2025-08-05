@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:cucumber": "cucumber-js --require tests/steps/*.js ../features/room/usageScenarios.feature",
+    "test:cucumber": "cucumber-js --require tests/steps/*.js ../features/",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed"
   },
