@@ -17,10 +17,6 @@ function LoginDropdown() {
       </button>
       {isOpen && (
         <div className="dropdown-content">
-<<<<<<< Updated upstream
-          <Link to="/login-hospede" onClick={closeDropdown}>Hóspede</Link>
-          <Link to="/login-hotel" onClick={closeDropdown}>Hotel</Link>
-=======
           <Link to="/login-hospede" onClick={closeDropdown} className="dropdown-link">
             <span className="link-icon">👤</span>
             Hóspede
@@ -36,7 +32,6 @@ function LoginDropdown() {
             <span className="link-icon">👑</span>
             Admin
           </Link>
->>>>>>> Stashed changes
         </div>
       )}
     </div>
