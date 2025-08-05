@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -11,9 +11,9 @@ function HotelDashboard() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Estados para filtros
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedPeriod, setSelectedPeriod] = useState(12);
+  // Estados para filtros (reservados para implementação futura)
+  // const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  // const [selectedPeriod, setSelectedPeriod] = useState(12);
 
   // Controle de acesso - Apenas hotéis podem acessar
   useEffect(() => {
@@ -32,9 +32,9 @@ function HotelDashboard() {
     if (user && user.tipo === 'hotel') {
       fetchHotelStats();
     }
-  }, [selectedYear, selectedPeriod, user]);
+  }, [user, fetchHotelStats]);
 
-  const fetchHotelStats = async () => {
+  const fetchHotelStats = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -54,7 +54,7 @@ function HotelDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {

@@ -57,7 +57,7 @@ When('solicito as estatísticas gerais do sistema', async function () {
   apiResponse = await page.textContent('body');
 });
 
-Then('recebo uma resposta de sucesso com código {string}', async function (statusCode) {
+Then('recebo uma resposta de sucesso com código {string}', async function () {
   expect(page.url()).toContain('/api/statistics/');
   const data = JSON.parse(apiResponse);
   expect(data.success).toBe(true);
@@ -179,7 +179,7 @@ When('solicito a limpeza do cache via DELETE', async function () {
   apiResponse = response;
 });
 
-Then('a mensagem confirma que o {string}', async function (message) {
+Then('a mensagem confirma que o {string}', async function () {
   const data = JSON.parse(apiResponse);
   expect(data.success).toBe(true);
   expect(data.message).toContain('Cache cleared');
