@@ -10,6 +10,8 @@ import LoginHospede from './pages/LoginHospede';
 import LoginHotel from './pages/LoginHotel';
 import ProfilePage from './pages/ProfilePage';
 import EditHospede from './pages/EditHospede';
+import LoginAdmin from './pages/LoginAdmin';
+import AdminDashboard from './pages/AdminDashboard';
 import EditHotel from './pages/EditHotel';
 import ChangePassword from './pages/ChangePassword'; 
 import SearchResults from './pages/SearchResults';
@@ -30,6 +32,8 @@ function App() {
             <Route path="/login-hotel" element={<LoginHotel />} />
             <Route path="/perfil" element={<ProfilePage />} />
             <Route path="/editar-hospede/:id" element={<EditHospede />} />
+            <Route path="/login-admin" element={<LoginAdmin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/editar-hotel/:id" element={<EditHotel />} />
             <Route path="/alterar-senha" element={<ChangePassword />} />
             <Route path="/search-results" element={<SearchResults />} />
