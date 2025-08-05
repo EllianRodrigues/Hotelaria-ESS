@@ -83,6 +83,8 @@ npm run test:coverage
 ```
 
 ## 🧪 Testes - frontend
+- Rode o backend
+- Rode o frontend
 
 ```bash
 # Navegar para o diretório frontend
