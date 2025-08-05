@@ -1,0 +1,355 @@
+/* EditPages.css - Design Moderno para Páginas de Edição */
+
+.edit-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Background com padrão */
+.edit-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  z-index: 0;
+}
+
+/* Card principal */
+.edit-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideUp 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.edit-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.edit-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.edit-header h1 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.edit-header p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Formulário */
+.edit-form {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #6b46c1;
+  box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+}
+
+.edit-input::placeholder {
+  color: #a0aec0;
+}
+
+.input-icon {
+  position: absolute;
+  right: 15px;
+  font-size: 1.2rem;
+  color: #6b46c1;
+  pointer-events: none;
+}
+
+/* Botão principal */
+.edit-button {
+  width: 100%;
+  padding: 15px;
+  background: #6b46c1;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.edit-button:hover:not(:disabled) {
+  background: #553c9a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(107, 70, 193, 0.3);
+}
+
+.edit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.edit-button.loading {
+  background: #553c9a;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Botões de ação */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.action-button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.primary-action {
+  background: #6b46c1;
+  color: white;
+}
+
+.primary-action:hover {
+  background: #553c9a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
+}
+
+.secondary-action {
+  background: #f7fafc;
+  color: #333;
+  border: 2px solid #e2e8f0;
+}
+
+.secondary-action:hover {
+  background: #edf2f7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Estados de loading e erro */
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #f56565;
+  font-size: 1.1rem;
+  background: rgba(245, 101, 101, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(245, 101, 101, 0.2);
+}
+
+.not-found-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Mensagens de sucesso e erro */
+.success-message,
+.error-message {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  z-index: 10000;
+  animation: slideInRight 0.3s ease-out;
+  max-width: 300px;
+}
+
+.success-message {
+  background: #48bb78;
+  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.error-message {
+  background: #f56565;
+  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .edit-container {
+    padding: 10px;
+  }
+
+  .edit-card {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
+
+  .edit-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .edit-icon {
+    font-size: 2.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .success-message,
+  .error-message {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-card {
+    padding: 25px 15px;
+  }
+
+  .edit-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .edit-input {
+    padding: 12px 45px 12px 15px;
+  }
+
+  .input-icon {
+    right: 12px;
+  }
+}
+
+/* Melhorias de acessibilidade */
+.edit-input:focus,
+.edit-button:focus,
+.action-button:focus {
+  outline: 2px solid #6b46c1;
+  outline-offset: 2px;
+}
+
+/* Efeitos de hover para dispositivos touch */
+@media (hover: none) {
+  .edit-button:hover:not(:disabled),
+  .action-button:hover {
+    transform: none;
+  }
+} 

@@ -2,12 +2,15 @@
   "name": "express-sqlite-mvc-api",
   "version": "1.0.0",
   "description": "A Node.js API using Express, SQLite, and MVC architecture.",
-  "main": "src/server.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "cross-env NODE_ENV=test mocha --timeout 10000 tests/**/*.test.js"
+    "test": "cross-env NODE_ENV=test mocha --timeout 10000 tests/**/*.test.js",
+    "test:unit": "cross-env NODE_ENV=test mocha --timeout 10000 unit-tests/**/*.test.js",
+    "test:all": "npm run test && npm run test:unit",
+    "seed": "node scripts/seedRooms.js"
   },
   "keywords": [
     "express",
@@ -18,8 +21,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^1.41.3",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
@@ -30,6 +38,7 @@
     "cross-env": "^7.0.3",
     "mocha": "^11.7.1",
     "nodemon": "^3.1.10",
+    "sinon": "^17.0.1",
     "supertest": "^7.1.1"
   }
 }
