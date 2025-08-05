@@ -21,7 +21,6 @@ BeforeAll(async function() {
     // 1a. Create hospede with CPF 335.447.380-07 and password 1234
     console.log('Creating hospede...');
     await setupPage.goto('http://localhost:5173/registro-hospede');
-    await setupPage.waitForTimeout(1000);
     await setupPage.fill('input[name="nome"]', 'Teste Hospede');
     await setupPage.fill('input[name="email"]', 'teste.hospede@test.com');
     await setupPage.fill('input[name="cpf"]', '335.447.380-07');
@@ -40,7 +39,6 @@ BeforeAll(async function() {
     // 1b. Create hotel with CNPJ 63.032.085/0001-00 and password 1234
     console.log('Creating hotel...');
     await setupPage.goto('http://localhost:5173/registro-hotel');
-    await setupPage.waitForTimeout(1000);
     await setupPage.fill('input[name="nome"]', 'Hotel Teste');
     await setupPage.fill('input[name="email"]', 'hotel.teste@test.com');
     await setupPage.fill('input[name="cnpj"]', '63.032.085/0001-00');
