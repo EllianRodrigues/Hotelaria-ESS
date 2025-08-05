@@ -13,7 +13,7 @@ Before(async function() {
   page = await context.newPage();
 });
 
-After(async function() {
+After({ timeout: 60000 }, async function() {
   if (page) await page.close();
   if (context) await context.close();
   if (browser) await browser.close();

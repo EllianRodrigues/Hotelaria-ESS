@@ -28,12 +28,6 @@ function HotelDashboard() {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (user && user.tipo === 'hotel') {
-      fetchHotelStats();
-    }
-  }, [user, fetchHotelStats]);
-
   const fetchHotelStats = useCallback(async () => {
     try {
       setLoading(true);
@@ -55,6 +49,12 @@ function HotelDashboard() {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user && user.tipo === 'hotel') {
+      fetchHotelStats();
+    }
+  }, [user, fetchHotelStats]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -114,7 +114,9 @@ function HotelDashboard() {
           <div className="metric-icon">🛏️</div>
           <div className="metric-content">
             <h3>Quartos Totais</h3>
-            <p className="metric-value">{formatNumber(stats?.totalRooms || 0)}</p>
+            <p className="metric-value" style={{ color: '#000000', fontSize: '2.2rem', fontWeight: '700' }}>
+              {formatNumber(stats?.totalRooms || 0)}
+            </p>
           </div>
         </div>
 
@@ -122,7 +124,9 @@ function HotelDashboard() {
           <div className="metric-icon">📅</div>
           <div className="metric-content">
             <h3>Reservas</h3>
-            <p className="metric-value">{formatNumber(stats?.totalReservations || 0)}</p>
+            <p className="metric-value" style={{ color: '#000000', fontSize: '2.2rem', fontWeight: '700' }}>
+              {formatNumber(stats?.totalReservations || 0)}
+            </p>
           </div>
         </div>
 
@@ -130,7 +134,9 @@ function HotelDashboard() {
           <div className="metric-icon">💰</div>
           <div className="metric-content">
             <h3>Receita Total</h3>
-            <p className="metric-value">{formatCurrency(stats?.totalRevenue || 0)}</p>
+            <p className="metric-value" style={{ color: '#000000', fontSize: '2.2rem', fontWeight: '700' }}>
+              {formatCurrency(stats?.totalRevenue || 0)}
+            </p>
           </div>
         </div>
 
@@ -138,7 +144,9 @@ function HotelDashboard() {
           <div className="metric-icon">📊</div>
           <div className="metric-content">
             <h3>Taxa de Ocupação</h3>
-            <p className="metric-value">{formatPercentage(stats?.occupancyRate || 0)}</p>
+            <p className="metric-value" style={{ color: '#000000', fontSize: '2.2rem', fontWeight: '700' }}>
+              {formatPercentage(stats?.occupancyRate || 0)}
+            </p>
           </div>
         </div>
       </div>

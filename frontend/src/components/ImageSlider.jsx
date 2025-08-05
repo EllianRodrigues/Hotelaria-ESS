@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ImageSlider.css';
 
 const ImageSlider = ({ slides, autoPlayInterval = 5000 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Função para avançar para o próximo slide
-  const nextSlide = () => {
+  // Função para avançar para o próximo slide - usando useCallback
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
+  }, [slides.length]);
 
   // Função para voltar ao slide anterior
   const prevSlide = () => {
@@ -22,12 +23,11 @@ const ImageSlider = ({ slides, autoPlayInterval = 5000 }) => {
 
   // Auto-play do slider
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextSlide();
-    }, autoPlayInterval);
+    if (isPaused || slides.length <= 1) return;
 
+    const interval = setInterval(nextSlide, autoPlayInterval);
     return () => clearInterval(interval);
-  }, [currentSlide, autoPlayInterval]);
+  }, [currentSlide, autoPlayInterval, nextSlide, isPaused, slides.length]);
 
   // Preload das imagens
   useEffect(() => {
@@ -54,8 +54,6 @@ const ImageSlider = ({ slides, autoPlayInterval = 5000 }) => {
   }, [slides]);
 
   // Pausar auto-play quando o mouse está sobre o slider
-  const [isPaused, setIsPaused] = useState(false);
-
   const handleMouseEnter = () => setIsPaused(true);
   const handleMouseLeave = () => setIsPaused(false);
 

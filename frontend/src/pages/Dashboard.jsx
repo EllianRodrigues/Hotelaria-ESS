@@ -103,8 +103,8 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>📊 Dashboard de Estatísticas</h1>
-        <p>Visão completa do sistema de hotelaria</p>
+        <h1>📊 Dashboard Administrativo</h1>
+        <p>Painel completo de controle e estatísticas do sistema</p>
         <div className="dashboard-filters">
           <select 
             value={selectedYear} 
@@ -132,44 +132,31 @@ function Dashboard() {
           className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          📈 Resumo Geral
+          📈 Visão Geral
         </button>
-
         <button 
           className={`tab-button ${activeTab === 'month' ? 'active' : ''}`}
           onClick={() => setActiveTab('month')}
         >
-          📅 Por Mês
+          📅 Mensal
         </button>
         <button 
           className={`tab-button ${activeTab === 'hotels' ? 'active' : ''}`}
           onClick={() => setActiveTab('hotels')}
         >
-          🏨 Top Hotéis
+          🏨 Hotéis
         </button>
         <button 
           className={`tab-button ${activeTab === 'rooms' ? 'active' : ''}`}
           onClick={() => setActiveTab('rooms')}
         >
-          🛏️ Por Tipo de Quarto
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'season' ? 'active' : ''}`}
-          onClick={() => setActiveTab('season')}
-        >
-          🌤️ Por Estação
+          🛏️ Quartos
         </button>
         <button 
           className={`tab-button ${activeTab === 'advanced' ? 'active' : ''}`}
           onClick={() => setActiveTab('advanced')}
         >
-          📊 Métricas Avançadas
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'trends' ? 'active' : ''}`}
-          onClick={() => setActiveTab('trends')}
-        >
-          📈 Tendências
+          📊 Avançado
         </button>
       </div>
 

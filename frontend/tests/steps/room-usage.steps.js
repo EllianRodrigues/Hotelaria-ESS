@@ -9,7 +9,7 @@ let globalBrowser;
 let globalContext;
 
 // Global setup - runs once for all scenarios
-BeforeAll(async function() {
+BeforeAll({ timeout: 60000 }, async function() {
   console.log('🚀 Setting up test data for all scenarios...');
   
   // Initialize browser context for setup
@@ -225,7 +225,8 @@ Then('I am still on the initial page', async function() {
   await expect(page).toHaveURL(/.*localhost:5173/);
 });
 
-Then('I can see a list of available hotel rooms in {string} for the dates {string} to {string} that allow for {string} adults', async function(city, startDate, endDate, adults) {
+// eslint-disable-next-line no-unused-vars
+Then('I can see a list of available hotel rooms in {string} for the dates {string} to {string} that allow for {string} adults', async function(_city, _startDate, _endDate, _adults) {
   // Look for room descriptions that would be in search results
   const roomDescription = page.locator('text="Quarto confortável com vista para o mar"');
   await roomDescription.isVisible();
@@ -258,7 +259,8 @@ Then('when I move to the {string} page I can see the hotel room with description
   expect(isVisible).toBe(true);
 });
 
-Then('the system adds the hotel room with room ID {string} to my hotel', async function(roomId) {
+// eslint-disable-next-line no-unused-vars
+Then('the system adds the hotel room with room ID {string} to my hotel', async function(_roomId) {
   // Verify the room was added to the hotel's room list
   const roomDescription = page.locator('text="Chalé com vista para o mar"');
   await roomDescription.isVisible();
