@@ -23,12 +23,16 @@ function LoginDropdown({ onClose }) {
       {isOpen && (
         <div className="dropdown-content">
           <Link to="/login-hospede" onClick={closeDropdown} className="dropdown-link">
-            <span className="link-icon"></span>
+            <span className="link-icon">🛏️</span>
             Hóspede
           </Link>
           <Link to="/login-hotel" onClick={closeDropdown} className="dropdown-link">
-            <span className="link-icon"></span>
+            <span className="link-icon">🏨</span>
             Hotel
+          </Link>
+          <Link to="/login-admin" onClick={closeDropdown} className="dropdown-link">
+            <span className="link-icon">👑</span>
+            Administrador
           </Link>
         </div>
       )}

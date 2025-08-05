@@ -146,6 +146,30 @@ function Navbar() {
                 <span className="nav-icon"></span>
                 Editar Perfil
               </Link>
+              
+              {/* Dashboard - Apenas para Admins */}
+              {user.tipo === 'admin' && (
+                <Link 
+                  to="/dashboard" 
+                  className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  <span className="nav-icon">📊</span>
+                  Dashboard Administrativo
+                </Link>
+              )}
+              
+              {/* Dashboard Hoteleiro - Apenas para Hotéis */}
+              {user.tipo === 'hotel' && (
+                <Link 
+                  to="/hotel-dashboard" 
+                  className={`nav-link ${location.pathname === '/hotel-dashboard' ? 'active' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  <span className="nav-icon">🏨</span>
+                  Painel do Hotel
+                </Link>
+              )}
               <button 
                 className="nav-link"
                 onClick={user.tipo === 'hospede' ? openRoomSearchModal : openAddRoomModal}

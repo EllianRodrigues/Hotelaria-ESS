@@ -48,7 +48,8 @@ db.serialize(() => {
     nome TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     cnpj TEXT NOT NULL UNIQUE,
-    senha TEXT NOT NULL
+    senha TEXT NOT NULL,
+    cidade TEXT
   )`);
 
   db.run(`CREATE TABLE IF NOT EXISTS rooms (
@@ -79,6 +80,7 @@ db.serialize(() => {
     end_date TEXT NOT NULL,
     room_id INTEGER NOT NULL,
     hospede_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (room_id) REFERENCES rooms(id),
     FOREIGN KEY (hospede_id) REFERENCES hospede(id)
   )`);

@@ -6,6 +6,7 @@ import hospedeController from '../controllers/hospedeController.js';
 import hotelController from '../controllers/hotelController.js';
 import authRouter from './authRouter.js';
 import adminRouter from './adminRouter.js';
+import statisticsRouter from './statisticsRouter.js';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use('/rooms', roomRouter);
 router.use('/reservations', reservationRouter);
 router.use('/upload', uploadRouter);
 router.use('/admin', adminRouter);
+router.use('/statistics', statisticsRouter);
 // router.get('/users', userController.getAllUsers);
 
 //////////////Ellian//////////////////////
@@ -35,4 +37,4 @@ router.put('/hotels/:id/password', hotelController.updateHotelPassword);
 router.use('/auth', authRouter);
 /////////////////////////////////////////
 
-export default router; 
+export default router;

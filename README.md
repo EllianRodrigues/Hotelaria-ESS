@@ -1,7 +1,5 @@
 # Sistema de Hotelaria - Projeto ESS
 
-**Feito por Juliano Matheus Ferreira**
-
 Este repositório contém um sistema completo de hotelaria, desenvolvido como parte da disciplina de **Engenharia de Software e Sistemas (ESS)**, incluindo funcionalidades avançadas de estatísticas e análise de dados.
 
 ## ✨ Funcionalidades

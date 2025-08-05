@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import EditRoomModal from '../components/EditRoomModal';
@@ -15,22 +15,7 @@ function HotelRoomsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  useEffect(() => {
-    // Verificar se o usuário está logado e é um hotel
-    if (!user) {
-      navigate('/');
-      return;
-    }
-
-    if (user.tipo !== 'hotel') {
-      navigate('/');
-      return;
-    }
-
-    fetchHotelRooms();
-  }, [user, navigate]);
-
-  const fetchHotelRooms = async () => {
+  const fetchHotelRooms = useCallback(async () => {
     if (!user || !user.id) {
       setError('Usuário não identificado');
       setLoading(false);
@@ -54,11 +39,22 @@ function HotelRoomsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  const handleBackToHome = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    // Verificar se o usuário está logado e é um hotel
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    if (user.tipo !== 'hotel') {
+      navigate('/');
+      return;
+    }
+
+    fetchHotelRooms();
+  }, [user, navigate, fetchHotelRooms]);
 
   const handleEditRoom = (room) => {
     setSelectedRoom(room);
