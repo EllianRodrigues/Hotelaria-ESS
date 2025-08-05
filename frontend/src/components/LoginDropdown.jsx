@@ -38,7 +38,6 @@ function LoginDropdown({ onClose }) {
             <span className="link-icon">👑</span>
             Admin
           </Link>
-
         </div>
       )}
     </div>
