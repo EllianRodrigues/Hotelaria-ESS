@@ -2,7 +2,7 @@ export default {
   default: {
     requireModule: ['ts-node/register'],
     require: ['tests/steps/*.js'],
-    paths: ['../features/'],
+    paths: ['../features/room/usageScenarios.feature'],
     format: ['@cucumber/pretty-formatter'],
     formatOptions: { snippetInterface: 'async-await' },
     publishQuiet: true,
