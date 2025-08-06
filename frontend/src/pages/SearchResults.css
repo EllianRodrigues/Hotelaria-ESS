@@ -1,0 +1,445 @@
+/* SearchResults.css - Design Moderno e Consistente */
+
+.search-results-container {
+  min-height: 100vh;
+  padding: 120px 2rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.search-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.search-header h1 {
+  color: #6b46c1;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(107, 70, 193, 0.1);
+}
+
+.search-summary {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.search-summary p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.search-summary strong {
+  color: #6b46c1;
+}
+
+.results-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  text-align: center;
+}
+
+.loading-message {
+  margin-bottom: 2rem;
+}
+
+.loading-message p {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e9ecef;
+  border-top: 4px solid #6b46c1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.search-actions {
+  margin-top: 2rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  margin: 0 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4);
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2px solid #e9ecef;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+  color: #495057;
+  transform: translateY(-1px);
+}
+
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.no-results h2 {
+  color: #6b46c1;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.no-results p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* --- Estilo do Botão de Reserva --- */
+.room-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  text-align: right;
+}
+
+.btn-reservar {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.2);
+}
+
+.btn-reservar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(107, 70, 193, 0.3);
+}
+
+/* --- Estilo do Toast de Sucesso --- */
+.success-toast {
+  position: fixed;
+  top: 90px; /* Abaixo da navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  z-index: 3000;
+  border-left: 5px solid #48bb78; /* Borda verde de sucesso */
+  animation: slideDownToast 0.5s ease-out forwards;
+  overflow: hidden;
+  width: 90%;
+  max-width: 450px;
+}
+
+.toast-icon {
+  font-size: 1.5rem;
+  color: #48bb78;
+  margin-right: 1rem;
+}
+
+.toast-content h4 {
+  margin: 0 0 0.25rem 0;
+  color: #333;
+}
+
+.toast-content p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Barra de progresso para auto-fechamento */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background-color: #48bb78;
+  animation: shrink 5s linear forwards;
+}
+
+@keyframes slideDownToast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* --- Outros ajustes --- */
+.room-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.room-details {
+  flex-grow: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .search-results-container {
+    padding: 100px 1rem 1rem;
+  }
+
+  .search-header h1 {
+    font-size: 2rem;
+  }
+
+  .results-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .search-summary {
+    padding: 1rem;
+  }
+
+  .search-summary p {
+    font-size: 1rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .results-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .loading-message p {
+    font-size: 1rem;
+  }
+}
+
+/* Melhorias de acessibilidade */
+.btn-primary:focus,
+.btn-secondary:focus {
+  outline: 2px solid #6b46c1;
+  outline-offset: 2px;
+}
+
+/* Efeitos de hover para dispositivos touch */
+@media (hover: none) {
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}
+
+/* Estilos para os quartos encontrados */
+.rooms-title {
+  color: #6b46c1;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(107, 70, 193, 0.1);
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.rooms-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.room-card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.room-header h4 {
+  color: #6b46c1;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.room-price {
+  background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.room-details {
+  margin-bottom: 1rem;
+}
+
+.room-details p {
+  margin: 0.5rem 0;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.room-details strong {
+  color: #6b46c1;
+}
+
+.room-photos {
+  margin-top: 1rem;
+}
+
+.room-photos p {
+  margin-bottom: 0.5rem;
+  color: #6b46c1;
+  font-weight: 600;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.5rem;
+}
+
+.room-photo {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+}
+
+.error-message,
+.no-rooms-message {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.error-message p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.no-rooms-message p {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Responsividade para os quartos */
+@media (max-width: 768px) {
+  .rooms-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .rooms-title {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .room-card {
+    padding: 1rem;
+  }
+
+  .room-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .photos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+
+  .room-photo {
+    height: 60px;
+  }
+} 

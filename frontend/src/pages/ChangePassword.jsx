@@ -1,7 +1,8 @@
 // src/pages/ChangePassword.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import './EditPages.css';
 
 function ChangePassword() {
   const { user } = useAuth();
@@ -9,13 +10,16 @@ function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState(''); 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!user || !user.id || !(user.cpf || user.cnpj)) {
-      alert('Você precisa estar logado para mudar sua senha.');
-      navigate('/login-hospede');
+      showErrorMessage('Você precisa estar logado para mudar sua senha.');
+      setTimeout(() => navigate('/login-hospede'), 2000);
     }
   }, [user, navigate]);
 
@@ -64,11 +68,11 @@ function ChangePassword() {
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
-      alert('Senha atualizada com sucesso!');
+      showSuccessMessage('Senha atualizada com sucesso!');
       setCurrentPassword(''); 
       setNewPassword('');
       setConfirmPassword('');
-      navigate('/'); 
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       console.error('Erro ao atualizar senha:', err);
       setError('Erro ao atualizar senha: ' + err.message);
@@ -77,20 +81,157 @@ function ChangePassword() {
     }
   };
 
-  if (!user || loading) return <p style={{ textAlign: 'center' }}>Carregando...</p>;
-  if (error) return <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>;
+  const showSuccessMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'success-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
+  const showErrorMessage = (message) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'error-message';
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 3000);
+  };
+
+  if (!user) {
+    return (
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Carregando...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="edit-container">
+        <div className="edit-card">
+          <div className="error-state">
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Alterar Senha ({user.tipo === 'hospede' ? 'Hóspede' : 'Hotel'} - {user.nome})</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-        <input type="password" placeholder="Senha Atual" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
-        <input type="password" placeholder="Nova Senha" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-        <input type="password" placeholder="Confirme a Nova Senha" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Atualizando...' : 'Alterar Senha'}
-        </button>
-      </form>
+    <div className="edit-container">
+      <div className="edit-card">
+        <div className="edit-header">
+          <div className="edit-icon"></div>
+          <h1>Alterar Senha</h1>
+          <p>{user.tipo === 'hospede' ? 'Hóspede' : 'Hotel'} - {user.nome}</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="edit-form">
+          <div className="form-group">
+            <label htmlFor="currentPassword">Senha Atual</label>
+            <div className="input-wrapper">
+              <input
+                type={showCurrentPassword ? "text" : "password"}
+                id="currentPassword"
+                placeholder="Digite sua senha atual"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              >
+                {showCurrentPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="newPassword">Nova Senha</label>
+            <div className="input-wrapper">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                id="newPassword"
+                placeholder="Digite a nova senha"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirmar Nova Senha</label>
+            <div className="input-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                placeholder="Confirme a nova senha"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="edit-input"
+              />
+              <span className="input-icon"></span>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            className={`edit-button ${loading ? 'loading' : ''}`}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="loading-spinner"></span>
+                Atualizando...
+              </>
+            ) : (
+              'Alterar Senha'
+            )}
+          </button>
+        </form>
+
+        <div className="action-buttons">
+          <Link to={`/editar-${user.tipo}/${user.id}`} className="action-button secondary-action">
+            Editar Perfil
+          </Link>
+          <Link to="/" className="action-button primary-action">
+            Voltar ao Início
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

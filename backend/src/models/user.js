@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const User = {
   getAll: () => {
@@ -11,4 +11,4 @@ const User = {
   },
 };
 
-module.exports = User; 
+export default User; 

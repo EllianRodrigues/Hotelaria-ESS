@@ -1,4 +1,4 @@
-const db = require('../sqlite/db');
+import db from '../sqlite/db.js';
 
 const Hospede = {
   getAll: () => {
@@ -55,6 +55,15 @@ const Hospede = {
       });
     });
   },
+  // Função para deletar um hóspede pelo ID
+  deleteById: (id) => {
+      return new Promise((resolve, reject) => {
+        db.run('DELETE FROM hospede WHERE id = ?', [id], function(err) {
+          if (err) reject(err);
+          else resolve({ deleted: this.changes });
+        });
+      });
+  },
 
   updatePassword: (id, currentPassword, newPassword, loggedInCpf) => {
     return new Promise((resolve, reject) => { 
@@ -78,4 +87,4 @@ const Hospede = {
   }
 };
 
-module.exports = Hospede;
+export default Hospede;

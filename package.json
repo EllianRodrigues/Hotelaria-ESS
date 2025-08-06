@@ -1,0 +1,45 @@
+{
+  "name": "hotelaria-estatisticas",
+  "version": "1.0.0",
+  "description": "API de Estatísticas para Sistema de Hotelaria - Feito por Juliano Matheus Ferreira",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint backend/",
+    "lint:fix": "eslint backend/ --fix",
+    "docs": "jsdoc backend/ -d docs",
+    "security": "npm audit"
+  },
+  "keywords": [
+    "hotelaria",
+    "estatisticas",
+    "api",
+    "nodejs",
+    "express",
+    "sqlite"
+  ],
+  "author": "Juliano Matheus Ferreira",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.2",
+    "eslint": "^8.55.0",
+    "jsdoc": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
